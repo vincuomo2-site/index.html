@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Dashboard — Vincenzo Cuomo | FinecoBank</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ═══════════════════ RESET & BASE ═══════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#00112D;
+  --navy2:#0a1f3d;
+  --gold:#C8A850;
+  --gold2:#f5d98a;
+  --bg:#0d1117;
+  --card:#111827;
+  --card2:#1a2332;
+  --border:#1e2d42;
+  --text:#e6edf3;
+  --muted:#8b949e;
+  --green:#39d353;
+  --red:#f85149;
+  --orange:#ffa657;
+  --blue:#58a6ff;
+  --purple:#bc8cff;
+  --radius:12px;
+  --shadow:0 4px 24px rgba(0,0,0,.45);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'SF Pro Display',system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.5;min-height:100vh;}
+
+/* ═══════════════════ HEADER ═══════════════════ */
+.header{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 60%,#0f2647 100%);
+  border-bottom:2px solid var(--gold);
+  padding:16px 20px 12px;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 20px rgba(0,0,0,.6);
+}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.logo-area{display:flex;align-items:center;gap:14px;}
+.logo-icon{
+  width:44px;height:44px;border-radius:10px;
+  background:linear-gradient(135deg,var(--gold),#a07828);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:18px;color:var(--navy);letter-spacing:-1px;
+  flex-shrink:0;
+}
+.logo-text{line-height:1.2;}
+.logo-text .name{font-size:15px;font-weight:700;color:#fff;}
+.logo-text .role{font-size:11px;color:var(--gold);font-weight:500;letter-spacing:.3px;}
+.header-right{display:flex;align-items:center;gap:10px;}
+.date-badge{
+  background:rgba(200,168,80,.12);border:1px solid rgba(200,168,80,.3);
+  padding:5px 12px;border-radius:20px;font-size:11px;color:var(--gold);font-weight:600;
+}
+.update-btn{
+  background:var(--gold);color:var(--navy);border:none;border-radius:8px;
+  padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;
+  transition:all .2s;letter-spacing:.3px;
+}
+.update-btn:hover{background:var(--gold2);}
+
+/* ═══════════════════ NAV TABS ═══════════════════ */
+.nav-tabs{
+  background:var(--card);border-bottom:1px solid var(--border);
+  padding:0 20px;overflow-x:auto;white-space:nowrap;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.nav-tabs-inner{max-width:1200px;margin:0 auto;display:inline-flex;gap:0;}
+.tab-btn{
+  background:none;border:none;color:var(--muted);padding:12px 18px;
+  font-size:13px;font-weight:500;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .2s;
+  white-space:nowrap;
+}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:700;}
+
+/* ═══════════════════ MAIN CONTENT ═══════════════════ */
+.main{max-width:1200px;margin:0 auto;padding:20px;}
+
+/* ═══════════════════ SECTION ═══════════════════ */
+.section{display:none;}
+.section.active{display:block;}
+
+/* ═══════════════════ KPI STRIP ═══════════════════ */
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;}
+.kpi-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:14px 16px;text-align:center;
+  transition:transform .2s, box-shadow .2s;
+}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
+.kpi-card .kpi-val{font-size:22px;font-weight:800;color:var(--gold);line-height:1;}
+.kpi-card .kpi-lbl{font-size:10px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.5px;}
+.kpi-card .kpi-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ═══════════════════ SECTION TITLE ═══════════════════ */
+.sec-title{
+  font-size:13px;font-weight:700;color:var(--gold);
+  text-transform:uppercase;letter-spacing:.8px;
+  margin:20px 0 10px;padding-left:10px;
+  border-left:3px solid var(--gold);
+}
+
+/* ═══════════════════ TABLE ═══════════════════ */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius);border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+thead tr{background:var(--navy);}
+thead th{
+  padding:10px 12px;text-align:left;font-size:10px;font-weight:700;
+  color:var(--gold);text-transform:uppercase;letter-spacing:.5px;
+  white-space:nowrap;border-bottom:1px solid var(--gold);
+}
+tbody tr{border-bottom:1px solid var(--border);transition:background .15s;}
+tbody tr:hover{background:rgba(200,168,80,.06);}
+tbody tr:last-child{border-bottom:none;}
+td{padding:9px 12px;vertical-align:middle;}
+.isin{font-family:'SF Mono',monospace;font-size:11px;color:var(--blue);font-weight:600;}
+.ytw{font-weight:700;color:var(--gold);}
+.rating-aaa{color:#39d353;} .rating-aa{color:#58d68d;} .rating-a{color:#58a6ff;}
+.rating-bbb{color:var(--orange);} .rating-hy{color:var(--red);}
+.tag{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;}
+.tag-new{background:rgba(255,166,87,.2);color:var(--orange);border:1px solid rgba(255,166,87,.4);}
+.tag-port{background:rgba(57,211,83,.15);color:var(--green);border:1px solid rgba(57,211,83,.3);}
+.tag-hy{background:rgba(248,81,73,.15);color:var(--red);border:1px solid rgba(248,81,73,.3);}
+.tag-strat{background:rgba(188,140,255,.15);color:var(--purple);border:1px solid rgba(188,140,255,.3);}
+.perf-pos{color:var(--green);font-weight:700;}
+.perf-neg{color:var(--red);font-weight:700;}
+.perf-neu{color:var(--muted);}
+
+/* ═══════════════════ CARD GRID ═══════════════════ */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:20px;}
+.prod-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;transition:all .2s;
+}
+.prod-card:hover{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),var(--shadow);}
+.prod-card .pc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.prod-card .pc-name{font-size:13px;font-weight:700;color:#fff;line-height:1.3;}
+.prod-card .pc-isin{font-family:'SF Mono',monospace;font-size:10px;color:var(--blue);margin-top:3px;}
+.prod-card .pc-badge{
+  background:rgba(200,168,80,.15);color:var(--gold);
+  border:1px solid rgba(200,168,80,.3);
+  padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;
+  white-space:nowrap;
+}
+.pc-rows{display:flex;flex-direction:column;gap:5px;}
+.pc-row{display:flex;justify-content:space-between;align-items:center;}
+.pc-row .lbl{font-size:11px;color:var(--muted);}
+.pc-row .val{font-size:12px;font-weight:600;color:var(--text);}
+.pc-row .val.gold{color:var(--gold);}
+.pc-divider{height:1px;background:var(--border);margin:8px 0;}
+
+/* ═══════════════════ CALCOLATORE ═══════════════════ */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:640px){.calc-grid{grid-template-columns:1fr;}}
+.calc-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;}
+.calc-card h3{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.form-group{margin-bottom:12px;}
+.form-group label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+.form-group input,.form-group select{
+  width:100%;background:var(--card2);border:1px solid var(--border);
+  color:var(--text);padding:9px 12px;border-radius:8px;font-size:13px;
+  outline:none;transition:border .2s;
+}
+.form-group input:focus,.form-group select:focus{border-color:var(--gold);}
+.calc-btn{
+  width:100%;background:linear-gradient(135deg,var(--gold),#a07828);
+  color:var(--navy);border:none;border-radius:8px;padding:11px;
+  font-size:13px;font-weight:800;cursor:pointer;margin-top:4px;
+  letter-spacing:.3px;transition:all .2s;
+}
+.calc-btn:hover{opacity:.9;transform:translateY(-1px);}
+.calc-result{
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:10px;padding:16px;margin-top:14px;
+}
+.calc-result .r-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);}
+.calc-result .r-row:last-child{border-bottom:none;}
+.calc-result .r-lbl{font-size:11px;color:var(--muted);}
+.calc-result .r-val{font-size:13px;font-weight:700;color:var(--gold);}
+.calc-result .r-val.green{color:var(--green);}
+.calc-result .r-val.orange{color:var(--orange);}
+.disclaimer{font-size:10px;color:var(--muted);margin-top:8px;font-style:italic;line-height:1.4;}
+
+/* ═══════════════════ MACRO CONTEXT ═══════════════════ */
+.macro-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:20px;}
+.macro-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;}
+.macro-card .mc-title{font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.macro-card .mc-body{font-size:12px;color:var(--muted);line-height:1.6;}
+.macro-card .mc-body strong{color:var(--text);}
+.flow-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+.flow-in{background:rgba(57,211,83,.08);border:1px solid rgba(57,211,83,.2);border-radius:8px;padding:10px;}
+.flow-out{background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.2);border-radius:8px;padding:10px;}
+.flow-in .flow-lbl{font-size:10px;font-weight:700;color:var(--green);margin-bottom:5px;text-transform:uppercase;}
+.flow-out .flow-lbl{font-size:10px;font-weight:700;color:var(--red);margin-bottom:5px;text-transform:uppercase;}
+.flow-item{font-size:11px;color:var(--text);padding:2px 0;}
+
+/* ═══════════════════ CHART ═══════════════════ */
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px;}
+.chart-card h3{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;}
+.chart-wrap{position:relative;height:220px;}
+
+/* ═══════════════════ SCADENZARIO ═══════════════════ */
+.scad-year{margin-bottom:18px;}
+.scad-year-hdr{
+  font-size:13px;font-weight:800;color:var(--navy);
+  background:var(--gold);padding:6px 14px;border-radius:6px;
+  display:inline-block;margin-bottom:8px;letter-spacing:.3px;
+}
+.scad-item{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;margin-bottom:6px;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.scad-type{font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;}
+.scad-type.scad{background:rgba(88,166,255,.15);color:var(--blue);}
+.scad-type.call{background:rgba(255,166,87,.15);color:var(--orange);}
+.scad-emitt{font-size:12px;font-weight:600;color:var(--text);flex:1;}
+.scad-isin{font-family:'SF Mono',monospace;font-size:10px;color:var(--blue);}
+.scad-ced{font-size:11px;color:var(--gold);font-weight:700;}
+.scad-ccy{font-size:10px;color:var(--muted);}
+.scad-note{font-size:10px;color:var(--orange);width:100%;}
+
+/* ═══════════════════ SEARCH ═══════════════════ */
+.search-bar{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:10px 14px;display:flex;gap:10px;
+  align-items:center;margin-bottom:14px;
+}
+.search-bar input{
+  flex:1;background:none;border:none;color:var(--text);font-size:13px;outline:none;
+}
+.search-bar input::placeholder{color:var(--muted);}
+.search-icon{color:var(--muted);font-size:16px;}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.filter-btn{
+  background:var(--card2);border:1px solid var(--border);color:var(--muted);
+  padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;
+  transition:all .2s;
+}
+.filter-btn:hover,.filter-btn.active{background:rgba(200,168,80,.15);color:var(--gold);border-color:var(--gold);}
+
+/* ═══════════════════ RESPONSIVE ═══════════════════ */
+@media(max-width:768px){
+  .main{padding:12px;}
+  .kpi-strip{grid-template-columns:repeat(3,1fr);}
+  .tab-btn{padding:11px 14px;font-size:12px;}
+  .header-inner{gap:8px;}
+}
+@media(max-width:480px){
+  .kpi-strip{grid-template-columns:repeat(2,1fr);}
+  .logo-text .name{font-size:13px;}
+}
+
+/* ═══════════════════ SCROLLBAR ═══════════════════ */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:var(--muted);}
+
+/* ═══════════════════ ANIMATIONS ═══════════════════ */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.section.active{animation:fadeIn .25s ease-out;}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ HEADER ══════════════ -->
+<div class="header">
+  <div class="header-inner">
+    <div class="logo-area">
+      <div class="logo-icon">VC</div>
+      <div class="logo-text">
+        <div class="name">Vincenzo Cuomo</div>
+        <div class="role">Private Banker · FinecoBank</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="date-badge" id="dateBadge">28/02/2026</div>
+      <button class="update-btn" onclick="setToday()">↻ Aggiorna</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ NAV ══════════════ -->
+<div class="nav-tabs">
+  <div class="nav-tabs-inner">
+    <button class="tab-btn active" onclick="showTab('overview')">📊 Overview</button>
+    <button class="tab-btn" onclick="showTab('bonds')">🏦 Bond EUR</button>
+    <button class="tab-btn" onclick="showTab('bonds-usd')">🌍 Bond USD/GBP</button>
+    <button class="tab-btn" onclick="showTab('etf')">📈 ETF Monitor</button>
+    <button class="tab-btn" onclick="showTab('prodotti')">🔐 Prodotti FAM</button>
+    <button class="tab-btn" onclick="showTab('calcolatore')">🧮 Calcolatore</button>
+    <button class="tab-btn" onclick="showTab('scadenzario')">📅 Scadenzario</button>
+    <button class="tab-btn" onclick="showTab('macro')">🌐 Macro Context</button>
+  </div>
+</div>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<div class="main">
+
+<!-- ════ TAB: OVERVIEW ════ -->
+<div class="section active" id="sec-overview">
+  <div class="kpi-strip">
+    <div class="kpi-card"><div class="kpi-val">52</div><div class="kpi-lbl">Bond in watchlist</div><div class="kpi-sub">EUR + USD/GBP</div></div>
+    <div class="kpi-card"><div class="kpi-val">29</div><div class="kpi-lbl">ETF monitorati</div><div class="kpi-sub">ISINificio feb 26</div></div>
+    <div class="kpi-card"><div class="kpi-val">3.20%</div><div class="kpi-lbl">Yield Port. Bond</div><div class="kpi-sub">Intermonte dic 25</div></div>
+    <div class="kpi-card"><div class="kpi-val">2.69</div><div class="kpi-lbl">Duration media</div><div class="kpi-sub">Portafoglio</div></div>
+    <div class="kpi-card"><div class="kpi-val">2</div><div class="kpi-lbl">Nuove emissioni</div><div class="kpi-sub">⭐ Feb 2026</div></div>
+    <div class="kpi-card"><div class="kpi-val">+32.7%</div><div class="kpi-lbl">ETF top YTD</div><div class="kpi-sub">NCLR Nucleare</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;">
+    <div class="chart-card">
+      <h3>📊 Asset Allocation Target (ETF Box gen 2026)</h3>
+      <div class="chart-wrap"><canvas id="chartAlloc"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>📈 Top ETF per Performance YTD</h3>
+      <div class="chart-wrap"><canvas id="chartEtfTop"></canvas></div>
+    </div>
+  </div>
+
+  <div class="sec-title">⭐ SEGNALAZIONI PRIORITARIE — Febbraio 2026</div>
+  <div class="card-grid">
+    <div class="prod-card">
+      <div class="pc-header">
+        <div><div class="pc-name">BMW Finance NV 3.25% 2032</div><div class="pc-isin">XS3280519078</div></div>
+        <div class="pc-badge">⭐ NUOVA</div>
+      </div>
+      <div class="pc-rows">
+        <div class="pc-row"><span class="lbl">Settore</span><span class="val">Auto / Rating A</span></div>
+        <div class="pc-row"><span class="lbl">YTW</span><span class="val gold">3.13%</span></div>
+        <div class="pc-row"><span class="lbl">Scadenza</span><span class="val">27/01/2032</span></div>
+        <div class="pc-row"><span class="lbl">Valuta</span><span class="val">EUR · Taglio 1.000</span></div>
+      </div>
+    </div>
+    <div class="prod-card">
+      <div class="pc-header">
+        <div><div class="pc-name">Mediobanca 2.90% 2027</div><div class="pc-isin">IT0005507832</div></div>
+        <div class="pc-badge">⭐ NUOVA</div>
+      </div>
+      <div class="pc-rows">
+        <div class="pc-row"><span class="lbl">Settore</span><span class="val">Banks / Rating BBB+</span></div>
+        <div class="pc-row"><span class="lbl">YTW</span><span class="val gold">2.63%</span></div>
+        <div class="pc-row"><span class="lbl">Scadenza</span><span class="val">28/09/2027</span></div>
+        <div class="pc-row"><span class="lbl">Valuta</span><span class="val">EUR · Taglio 1.000</span></div>
+      </div>
+    </div>
+    <div class="prod-card">
+      <div class="pc-header">
+        <div><div class="pc-name">Terre Rare ETF (RARE)</div><div class="pc-isin">IE000KHX90X6</div></div>
+        <div class="pc-badge tag-strat">STRATEGICO</div>
+      </div>
+      <div class="pc-rows">
+        <div class="pc-row"><span class="lbl">Tipo</span><span class="val">Azionario / Terre Rare</span></div>
+        <div class="pc-row"><span class="lbl">YTD</span><span class="val" style="color:var(--green)">+18.35%</span></div>
+        <div class="pc-row"><span class="lbl">TER</span><span class="val">0.50%</span></div>
+        <div class="pc-row"><span class="lbl">Orizzonte</span><span class="val">30–60 giorni (ETF Box)</span></div>
+      </div>
+    </div>
+    <div class="prod-card">
+      <div class="pc-header">
+        <div><div class="pc-name">WT Uranium Nuclear Energy</div><div class="pc-isin">IE0003BU2JS4</div></div>
+        <div class="pc-badge" style="background:rgba(57,211,83,.15);color:var(--green);border-color:rgba(57,211,83,.3);">TOP YTD</div>
+      </div>
+      <div class="pc-rows">
+        <div class="pc-row"><span class="lbl">Tipo</span><span class="val">Azionario / Nucleare</span></div>
+        <div class="pc-row"><span class="lbl">YTD</span><span class="val" style="color:var(--green)">+32.72%</span></div>
+        <div class="pc-row"><span class="lbl">Ticker</span><span class="val">NCLR</span></div>
+        <div class="pc-row"><span class="lbl">AuM</span><span class="val">0.30 Mld EUR</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ TAB: BOND EUR ════ -->
+<div class="section" id="sec-bonds">
+  <div class="search-bar">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchBond" placeholder="Cerca ISIN, emittente, settore..." oninput="filterTable('bondTable',this.value)">
+  </div>
+  <div class="filter-row" id="filterBond">
+    <button class="filter-btn active" onclick="filterByTag('bondTable','',this,'filterBond')">Tutti</button>
+    <button class="filter-btn" onclick="filterByTag('bondTable','Auto',this,'filterBond')">Auto</button>
+    <button class="filter-btn" onclick="filterByTag('bondTable','Banks',this,'filterBond')">Banks</button>
+    <button class="filter-btn" onclick="filterByTag('bondTable','Electric',this,'filterBond')">Energy</button>
+    <button class="filter-btn" onclick="filterByTag('bondTable','NUOVA',this,'filterBond')">⭐ Nuove</button>
+    <button class="filter-btn" onclick="filterByTag('bondTable','IN PORT',this,'filterBond')">📌 Portfolio</button>
+  </div>
+  <div class="sec-title">CORPORATE BOND EUR — Taglio min. 1.000 EUR — ISINificio, 20/02/2026</div>
+  <div class="table-wrap">
+    <table id="bondTable">
+      <thead><tr>
+        <th>ISIN</th><th>Emittente</th><th>Cedola</th><th>Scadenza</th>
+        <th>Rating</th><th>YTW</th><th>Next Call</th><th>Segnalazione</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="isin">BE6276040431</td><td>AB InBev SA/NV</td><td>1.50%</td><td>18/04/2030</td><td class="rating-a">A-</td><td class="ytw">2.66%</td><td>—</td><td></td></tr>
+        <tr><td class="isin">XS2447564332</td><td>BMW Finance NV</td><td>1.00%</td><td>22/05/2028</td><td class="rating-a">A</td><td class="ytw">2.45%</td><td>—</td><td></td></tr>
+        <tr><td class="isin">XS3075491152</td><td>BMW Finance NV</td><td>2.625%</td><td>20/05/2028</td><td class="rating-a">A</td><td class="ytw">2.48%</td><td>—</td><td></td></tr>
+        <tr><td class="isin">XS3075490188</td><td>BMW Finance NV</td><td>3.25%</td><td>20/05/2031</td><td class="rating-a">A</td><td class="ytw">3.01%</td><td>—</td><td></td></tr>
+        <tr style="background:rgba(255,166,87,.05)"><td class="isin">XS3280519078</td><td><strong>BMW Finance NV</strong></td><td>3.25%</td><td>27/01/2032</td><td class="rating-a">A</td><td class="ytw" style="color:var(--orange)">3.13%</td><td>—</td><td><span class="tag tag-new">⭐ NUOVA</span></td></tr>
+        <tr><td class="isin">XS1718418103</td><td>BASF SE</td><td>0.875%</td><td>15/11/2027</td><td class="rating-a">A-</td><td class="ytw">2.13%</td><td>15/08/2027</td><td></td></tr>
+        <tr><td class="isin">DE000A289QR9</td><td>Daimler AG</td><td>0.75%</td><td>10/09/2030</td><td class="rating-a">A</td><td class="ytw">2.79%</td><td>—</td><td></td></tr>
+        <tr><td class="isin">DE000A2GSLY0</td><td>Daimler AG</td><td>1.00%</td><td>15/11/2027</td><td class="rating-a">A</td><td class="ytw">2.30%</td><td>—</td><td></td></tr>
+        <tr><td class="isin">DE000A4EB2Y0</td><td>Mercedes-Benz IN</td><td>3.125%</td><td>05/09/2031</td><td class="rating-a">A</td><td class="ytw">3.00%</td><td>—</td><td></td></tr>
+        <tr><td class="isin">IT0005669400</td><td>Dolomiti Energia</td><td>3.50%</td><td>09/10/2030</td><td class="rating-bbb">NR/BBB+</td><td class="ytw">3.03%</td><td>09/10/2027</td><td></td></tr>
+        <tr><td class="isin">XS1861206636</td><td>Goldman Sachs GP</td><td>2.00%</td><td>01/11/2028</td><td class="rating-bbb">BBB+</td><td class="ytw">2.55%</td><td>—</td><td></td></tr>
+        <tr><td class="isin">XS2018637327</td><td>Heidelberg Matr</td><td>1.125%</td><td>01/12/2027</td><td class="rating-bbb">BBB</td><td class="ytw">2.24%</td><td>01/09/2027</td><td></td></tr>
+        <tr><td class="isin">XS3074499511</td><td>Heidelberg Matr</td><td>3.00%</td><td>10/07/2030</td><td class="rating-bbb">BBB</td><td class="ytw">2.84%</td><td>10/04/2030</td><td></td></tr>
+        <tr><td class="isin">DE000A383P48</td><td>KFW</td><td>2.50%</td><td>15/10/2031</td><td class="rating-aaa">AAA</td><td class="ytw">2.49%</td><td>—</td><td></td></tr>
+        <tr><td class="isin">IT0005493652</td><td>Mediobanca SPA</td><td>2.10%</td><td>25/05/2028</td><td class="rating-bbb">BBB+</td><td class="ytw">2.73%</td><td>—</td><td></td></tr>
+        <tr style="background:rgba(255,166,87,.05)"><td class="isin">IT0005507832</td><td><strong>Mediobanca SPA</strong></td><td>2.90%</td><td>28/09/2027</td><td class="rating-bbb">BBB+</td><td class="ytw" style="color:var(--orange)">2.63%</td><td>—</td><td><span class="tag tag-new">⭐ NUOVA</span></td></tr>
+        <tr style="background:rgba(57,211,83,.04)"><td class="isin">XS2750224201</td><td>Mediobanca SPA</td><td>3.10%</td><td>16/02/2029</td><td class="rating-bbb">BBB+</td><td class="ytw">2.87%</td><td>—</td><td><span class="tag tag-port">📌 IN PORT.</span></td></tr>
+        <tr><td class="isin">XS1828033834</td><td>Deutsche Tel Fin</td><td>2.00%</td><td>01/12/2029</td><td class="rating-bbb">BBB+</td><td class="ytw">2.50%</td><td>—</td><td></td></tr>
+        <tr><td class="isin">FR0014010623</td><td>RCI Banque</td><td>3.375%</td><td>06/06/2030</td><td class="rating-bbb">BBB-</td><td class="ytw">3.19%</td><td>06/03/2030</td><td></td></tr>
+        <tr><td class="isin">FR0013476090</td><td>RCI Banque</td><td>1.125%</td><td>15/01/2027</td><td class="rating-bbb">BBB-</td><td class="ytw">2.42%</td><td>15/10/2026</td><td></td></tr>
+        <tr><td class="isin">XS2482887879</td><td>RWE AG</td><td>2.75%</td><td>24/05/2030</td><td class="rating-bbb">NR/BBB+</td><td class="ytw">2.68%</td><td>24/02/2030</td><td></td></tr>
+        <tr><td class="isin">XS2412044567</td><td>RWE AG</td><td>0.50%</td><td>26/11/2028</td><td class="rating-bbb">NR/BBB+</td><td class="ytw">2.48%</td><td>26/08/2028</td><td></td></tr>
+        <tr><td class="isin">XS2049616621</td><td>Siemens Finan</td><td>0.125%</td><td>05/09/2029</td><td class="rating-aa">AA-</td><td class="ytw">2.15%</td><td>—</td><td></td></tr>
+        <tr><td class="isin">DE000A4DFCK8</td><td>Sixt SE</td><td>3.25%</td><td>22/01/2030</td><td class="rating-bbb">BBB</td><td class="ytw">2.89%</td><td>22/10/2029</td><td></td></tr>
+        <tr><td class="isin">XS2438616240</td><td>Volksw Fin Servi</td><td>0.875%</td><td>31/01/2028</td><td class="rating-bbb">BBB+</td><td class="ytw">2.59%</td><td>—</td><td></td></tr>
+        <tr><td class="isin">XS2374594823</td><td>Volksw Fin Servi</td><td>0.375%</td><td>12/02/2030</td><td class="rating-bbb">BBB+</td><td class="ytw">2.96%</td><td>—</td><td></td></tr>
+        <tr><td class="isin">EU000A3KWCF4</td><td>European Union</td><td>0.00%</td><td>04/10/2028</td><td class="rating-aa">AA+</td><td class="ytw">2.19%</td><td>—</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-title" style="margin-top:24px;">BTP — TITOLI DI STATO ITALIANI</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>ISIN</th><th>Nome</th><th>Cedola</th><th>Scadenza</th><th>YTW</th><th>Tipo</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="isin">IT0005454241</td><td>BTPS</td><td>0.00%</td><td>01/08/2026</td><td class="ytw">1.94%</td><td>Standard</td><td></td></tr>
+        <tr><td class="isin">IT0005390874</td><td>BTPS</td><td>0.85%</td><td>15/01/2027</td><td class="ytw">2.00%</td><td>Standard</td><td></td></tr>
+        <tr><td class="isin">IT0005654642</td><td>BTPS</td><td>2.70%</td><td>01/10/2030</td><td class="ytw">2.60%</td><td>Standard</td><td></td></tr>
+        <tr style="background:rgba(200,168,80,.06)"><td class="isin">IT0005466351</td><td>BTP Futura</td><td>1.35%</td><td>16/11/2033</td><td class="ytw">3.23%</td><td>Futura</td><td style="color:var(--orange);font-size:11px;">Step-up: 0.75%→1.35%→1.70%</td></tr>
+        <tr><td class="isin">IT0003934657</td><td>BTPS</td><td>4.00%</td><td>01/02/2037</td><td class="ytw">3.39%</td><td>Standard</td><td></td></tr>
+        <tr style="background:rgba(200,168,80,.06)"><td class="isin">IT0005425761</td><td>BTP Futura</td><td>0.60%</td><td>17/11/2028</td><td class="ytw">2.46%</td><td>Futura</td><td style="color:var(--orange);font-size:11px;">Step-up cedola · Port. Intermonte</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════ TAB: BOND USD/GBP ════ -->
+<div class="section" id="sec-bonds-usd">
+  <div style="background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.2);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--orange);">
+    ⚠️ <strong>Rischio cambio:</strong> I bond USD e GBP espongono al rischio cambio EUR/USD e EUR/GBP. Verificare disponibilità copertura cambio (hedging) con back-office Fineco prima dell'operazione.
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>ISIN</th><th>Emittente</th><th>Cedola</th><th>Scadenza</th>
+        <th>CCY</th><th>Rating</th><th>YTW</th><th>Next Call</th><th>Note</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="isin">XS2470196002</td><td>Goldman Sachs GP</td><td>3.45%</td><td>29/07/2026</td><td>USD</td><td class="rating-bbb">BBB+</td><td class="ytw">3.94%</td><td>—</td><td style="font-size:10px">Min 2.000 USD</td></tr>
+        <tr><td class="isin">XS1318212633</td><td>GS International</td><td>4.00%</td><td>20/06/2026</td><td>USD</td><td class="rating-a">A+</td><td class="ytw">5.43%</td><td>—</td><td style="font-size:10px">VAR, Min 2.000</td></tr>
+        <tr><td class="isin">US06051GGA13</td><td>Bank of America</td><td>3.248%</td><td>21/10/2027</td><td>USD</td><td class="rating-a">A-</td><td class="ytw">3.63%</td><td>21/10/2026</td><td></td></tr>
+        <tr><td class="isin">US172967LP48</td><td>Citigroup Inc</td><td>3.668%</td><td>24/07/2028</td><td>USD</td><td class="rating-bbb">BBB+</td><td class="ytw">3.91%</td><td>24/07/2027</td><td style="font-size:10px">VAR</td></tr>
+        <tr><td class="isin">XS2294835017</td><td>Intesa Sanpaolo</td><td>1.90%</td><td>08/02/2029</td><td>USD</td><td class="rating-bbb">BBB+</td><td class="ytw">4.02%</td><td>—</td><td style="font-size:10px">Min 2.000</td></tr>
+        <tr><td class="isin">XS2241390983</td><td>Intesa Sanpaolo</td><td>2.10%</td><td>13/11/2030</td><td>USD</td><td class="rating-bbb">BBB+</td><td class="ytw">4.25%</td><td>—</td><td style="font-size:10px">Sr Pref, Min 2.000</td></tr>
+        <tr style="background:rgba(57,211,83,.04)"><td class="isin">IT0005490955</td><td>Mediobanca SPA</td><td>3.00%</td><td>29/04/2027</td><td>USD</td><td class="rating-bbb">BBB+</td><td class="ytw">3.92%</td><td>—</td><td><span class="tag tag-port" style="font-size:9px">📌 IN PORT.</span></td></tr>
+        <tr><td class="isin">US89236TDR32</td><td>Toyota Mtr Cred</td><td>3.20%</td><td>11/01/2027</td><td>USD</td><td class="rating-a">A+</td><td class="ytw">3.64%</td><td>—</td><td style="font-size:10px">Min 2.000</td></tr>
+        <tr><td class="isin">US40434LAB18</td><td>HP Inc</td><td>3.00%</td><td>17/06/2027</td><td>USD</td><td class="rating-bbb">BBB</td><td class="ytw">3.96%</td><td>17/04/2027</td><td></td></tr>
+        <tr><td class="isin">US40434LAC90</td><td>HP Inc</td><td>3.40%</td><td>17/06/2030</td><td>USD</td><td class="rating-bbb">BBB</td><td class="ytw">4.38%</td><td>17/03/2030</td><td></td></tr>
+        <tr><td class="isin">US037833CX61</td><td>Apple Inc</td><td>3.00%</td><td>20/06/2027</td><td>USD</td><td class="rating-aa">AA+</td><td class="ytw">3.49%</td><td>20/03/2027</td><td></td></tr>
+        <tr><td class="isin">US02079KAD90</td><td>Alphabet Inc</td><td>1.10%</td><td>15/08/2030</td><td>USD</td><td class="rating-aa">AA+</td><td class="ytw">3.88%</td><td>15/05/2030</td><td></td></tr>
+        <tr><td class="isin">US29736RAS94</td><td>Estee Lauder</td><td>4.375%</td><td>15/05/2028</td><td>USD</td><td class="rating-a">A-</td><td class="ytw">3.78%</td><td>15/04/2028</td><td></td></tr>
+        <tr><td class="isin">US780153AW20</td><td>Royal Caribbean</td><td>3.70%</td><td>15/03/2028</td><td>USD</td><td class="rating-bbb">BBB</td><td class="ytw">4.04%</td><td>15/12/2027</td><td></td></tr>
+        <tr style="background:rgba(248,81,73,.05)"><td class="isin">US71647NBE85</td><td>Petrobras Glob</td><td>5.093%</td><td>15/01/2030</td><td>USD</td><td class="rating-hy">BB</td><td class="ytw" style="color:var(--red)">4.85%</td><td>—</td><td><span class="tag tag-hy">HY ⚠️</span></td></tr>
+        <tr><td class="isin">XS2398918024</td><td>European Invt Bk</td><td>0.875%</td><td>15/05/2026</td><td>GBP</td><td class="rating-aaa">AAA</td><td class="ytw">3.68%</td><td>—</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════ TAB: ETF MONITOR ════ -->
+<div class="section" id="sec-etf">
+  <div class="filter-row" id="filterEtf">
+    <button class="filter-btn active" onclick="filterByTag('etfTable','',this,'filterEtf')">Tutti</button>
+    <button class="filter-btn" onclick="filterByTag('etfTable','Azionario',this,'filterEtf')">Azionario</button>
+    <button class="filter-btn" onclick="filterByTag('etfTable','Obbligazionario',this,'filterEtf')">Obbligazionario</button>
+    <button class="filter-btn" onclick="filterByTag('etfTable','Commodities',this,'filterEtf')">Commodities</button>
+    <button class="filter-btn" onclick="filterByTag('etfTable','Liquidità',this,'filterEtf')">Liquidità</button>
+    <button class="filter-btn" onclick="filterByTag('etfTable','STRATEGICO',this,'filterEtf')">⭐ Strategici</button>
+  </div>
+  <div class="table-wrap">
+    <table id="etfTable">
+      <thead><tr>
+        <th>ISIN</th><th>Nome ETF</th><th>Ticker</th>
+        <th>AuM (Mld)</th><th>TER%</th>
+        <th>Perf 1M%</th><th>Perf YTD%</th><th>Vola 1M%</th>
+        <th>Asset Class</th><th>Segnalazione</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="isin">FR0010754200</td><td>AM Euro Gov Bd 0-6M</td><td>C3M</td><td>0.81</td><td>0.14%</td><td class="perf-pos">+0.18%</td><td class="perf-pos">+0.28%</td><td>0.33%</td><td>Liquidità</td><td></td></tr>
+        <tr><td class="isin">LU0321465469</td><td>X USD Overnight Rate Swap</td><td>XFFE</td><td>0.34</td><td>0.10%</td><td class="perf-pos">+0.06%</td><td class="perf-pos">+0.48%</td><td>6.64%</td><td>Liquidità</td><td></td></tr>
+        <tr><td class="isin">IE00BYM84Q22</td><td>WT FTSE MIB Banks</td><td>ITBL</td><td>0.03</td><td>0.35%</td><td class="perf-neg">-1.33%</td><td class="perf-neg">-2.79%</td><td>25.31%</td><td>Azionario</td><td></td></tr>
+        <tr><td class="isin">IE00B3ZW0K1B</td><td>iShares S&amp;P 500 EUR-H</td><td>IUSE</td><td>7.87</td><td>0.20%</td><td class="perf-pos">+0.13%</td><td class="perf-neg">-0.61%</td><td>10.81%</td><td>Azionario</td><td></td></tr>
+        <tr style="background:rgba(200,168,80,.06)"><td class="isin">IE000I80JTL1</td><td>FT NSDQ Smart Grid</td><td>GRID</td><td>1.55</td><td>0.63%</td><td class="perf-pos" style="color:var(--gold)"><strong>+10.42%</strong></td><td class="perf-pos" style="color:var(--gold)"><strong>+13.08%</strong></td><td>13.34%</td><td>Azionario</td><td><span class="tag tag-new">⭐ TOP 1M</span></td></tr>
+        <tr><td class="isin">NL0010408704</td><td>VanEck Wrld Equal Weight</td><td>TSWE</td><td>1.26</td><td>0.20%</td><td class="perf-pos">+3.34%</td><td class="perf-pos">+4.83%</td><td>12.66%</td><td>Azionario</td><td></td></tr>
+        <tr><td class="isin">IE0002EISAG0</td><td>X S&amp;P 500 EW EUR</td><td>XDEE</td><td>12.77</td><td>0.30%</td><td class="perf-pos">+2.77%</td><td class="perf-pos">+4.79%</td><td>9.42%</td><td>Azionario</td><td></td></tr>
+        <tr style="background:rgba(88,166,255,.04)"><td class="isin">IE0002YBX998</td><td>WT Europe Defence ETF</td><td>WDEF</td><td>4.68</td><td>0.40%</td><td class="perf-neg">-0.31%</td><td class="perf-pos" style="color:var(--blue)"><strong>+17.48%</strong></td><td>27.34%</td><td>Azionario/Difesa EU</td><td><span class="tag" style="background:rgba(88,166,255,.15);color:var(--blue);border-color:rgba(88,166,255,.3)">YTD+17.5%</span></td></tr>
+        <tr><td class="isin">IE008MWXKN31</td><td>HSBC Hang Seng Tech</td><td>HSTE</td><td>13.84</td><td>0.50%</td><td class="perf-neg">-8.75%</td><td class="perf-neg">-7.18%</td><td>23.03%</td><td>Azionario/Cina</td><td><span class="tag tag-hy">⚠️ Neg.</span></td></tr>
+        <tr style="background:rgba(188,140,255,.05)"><td class="isin">IE000KHX90X6</td><td>Wisdom Tree Terre Rare</td><td>RARE</td><td>0.84</td><td>0.50%</td><td class="perf-pos">+2.16%</td><td class="perf-pos" style="color:var(--purple)"><strong>+18.35%</strong></td><td>43.43%</td><td>Azionario/Terre Rare</td><td><span class="tag tag-strat">STRATEGICO</span></td></tr>
+        <tr style="background:rgba(57,211,83,.04)"><td class="isin">IE000M7V94E1</td><td>VanEck Uranium Nuclear</td><td>NUCL</td><td>2.33</td><td>0.55%</td><td class="perf-neg">-0.76%</td><td class="perf-pos" style="color:var(--green)"><strong>+20.27%</strong></td><td>43.90%</td><td>Azionario/Nucleare</td><td><span class="tag tag-port">YTD+20%</span></td></tr>
+        <tr style="background:rgba(57,211,83,.07)"><td class="isin">IE0003BU2JS4</td><td>WT Uranium Nuclear Energy</td><td>NCLR</td><td>0.30</td><td>0.45%</td><td class="perf-pos">+3.71%</td><td class="perf-pos" style="color:var(--green)"><strong>+32.72%</strong></td><td>52.06%</td><td>Azionario/Nucleare</td><td><span class="tag tag-port">🏆 YTD BEST</span></td></tr>
+        <tr><td class="isin">DE0005933931</td><td>iShares Core DAX</td><td>EXS1</td><td>8.80</td><td>0.16%</td><td class="perf-pos">+1.32%</td><td class="perf-pos">+2.27%</td><td>13.32%</td><td>Azionario/DAX</td><td></td></tr>
+        <tr style="background:rgba(200,168,80,.05)"><td class="isin">IE000RO5DSJ6</td><td>iShares ES Metals PR</td><td>METL</td><td>0.76</td><td>0.55%</td><td class="perf-pos">+2.46%</td><td class="perf-pos" style="color:var(--gold)"><strong>+17.09%</strong></td><td>45.79%</td><td>Azionario/Metalli</td><td><span class="tag tag-new">YTD+17%</span></td></tr>
+        <tr><td class="isin">IE000QDFFK00</td><td>AXA IM NASDAQ 100</td><td>ANAU</td><td>1.84</td><td>0.14%</td><td class="perf-neg">-1.75%</td><td class="perf-neg">-2.65%</td><td>16.11%</td><td>Azionario/USA Tech</td><td></td></tr>
+        <tr><td class="isin">IE00B9M6RS56</td><td>iShares JPM USD EM Bnd</td><td>EMBE</td><td>2.24</td><td>0.50%</td><td class="perf-pos">+1.79%</td><td class="perf-pos">+0.26%</td><td>4.09%</td><td>Obbligazionario/EM</td><td></td></tr>
+        <tr><td class="isin">IE00BKWD3BB1</td><td>Invesco EUR Corp Hybrid</td><td>EHBA</td><td>0.35</td><td>0.39%</td><td class="perf-pos">+1.08%</td><td class="perf-pos">+1.22%</td><td>3.03%</td><td>Obbligazionario</td><td></td></tr>
+        <tr><td class="isin">LU1650488494</td><td>AM Euro Gov Bond 3-5Y</td><td>—</td><td>2.33</td><td>0.15%</td><td class="perf-pos">+0.62%</td><td class="perf-pos">+0.89%</td><td>1.10%</td><td>Obbligazionario</td><td></td></tr>
+        <tr><td class="isin">IE00BFZPF322</td><td>Invesco USD AT1 CB</td><td>AT1</td><td>1.70</td><td>0.39%</td><td class="perf-pos">+1.06%</td><td class="perf-pos">+1.52%</td><td>6.96%</td><td>Obbligazionario/AT1</td><td></td></tr>
+        <tr><td class="isin">IE00B3VTMJ91</td><td>iShares Euro Govt 1-3Y</td><td>CSBGE3</td><td>2.16</td><td>0.15%</td><td class="perf-pos">+0.28%</td><td class="perf-pos">+0.54%</td><td>0.63%</td><td>Obbligazionario</td><td></td></tr>
+        <tr><td class="isin">IE00BH04GL39</td><td>Vanguard EUR Gov Bond</td><td>VGEA</td><td>4.49</td><td>0.07%</td><td class="perf-pos">+1.25%</td><td class="perf-pos">+1.59%</td><td>2.05%</td><td>Obbligazionario</td><td></td></tr>
+        <tr style="background:rgba(200,168,80,.06)"><td class="isin">XS2183935274</td><td>IVZ Physical Gold EU Hdg</td><td>SGLE</td><td>1.02</td><td>0.12%</td><td class="perf-pos">+5.46%</td><td class="perf-pos" style="color:var(--gold)"><strong>+14.28%</strong></td><td>41.65%</td><td>Commodities/Oro</td><td><span class="tag tag-new">YTD+14%</span></td></tr>
+        <tr><td class="isin">JE00B1VS3W29</td><td>WT Physical Precious Met</td><td>PHPM</td><td>0.42</td><td>0.44%</td><td class="perf-neg">-3.87%</td><td class="perf-pos">+8.39%</td><td>63.17%</td><td>Commodities/Metalli</td><td></td></tr>
+        <tr style="background:rgba(200,168,80,.06)"><td class="isin">JE00B1VS3770</td><td>WisdomTree Physical Gold</td><td>PHAU</td><td>8.74</td><td>0.39%</td><td class="perf-pos">+5.45%</td><td class="perf-pos" style="color:var(--gold)"><strong>+14.77%</strong></td><td>39.31%</td><td>Commodities/Oro</td><td><span class="tag tag-new">YTD+15%</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════ TAB: PRODOTTI FAM ════ -->
+<div class="section" id="sec-prodotti">
+  <div class="sec-title">ETF FINECO ASSET MANAGEMENT — Quotati Borsa Italiana</div>
+  <div class="card-grid">
+    <div class="prod-card"><div class="pc-header"><div><div class="pc-name">FAM MSCI World Metals &amp; Mining</div><div class="pc-isin">IE000EE3Q489</div></div><div class="pc-badge">FAMAMW.MI</div></div><div class="pc-rows"><div class="pc-row"><span class="lbl">Focus</span><span class="val">Metalli &amp; Mining Globale</span></div><div class="pc-row"><span class="lbl">SFDR</span><span class="val">Art. 8</span></div><div class="pc-row"><span class="lbl">Performance</span><span class="val gold">Aggiornare da Morningstar</span></div></div></div>
+    <div class="prod-card"><div class="pc-header"><div><div class="pc-name">FAM Active Collection Europe</div><div class="pc-isin">IE000ZHBBSR2</div></div><div class="pc-badge">PRIMO.MI</div></div><div class="pc-rows"><div class="pc-row"><span class="lbl">Focus</span><span class="val">Azionario Europa Attivo</span></div><div class="pc-row"><span class="lbl">SFDR</span><span class="val">Art. 8</span></div><div class="pc-row"><span class="lbl">Performance</span><span class="val gold">Aggiornare da Morningstar</span></div></div></div>
+    <div class="prod-card"><div class="pc-header"><div><div class="pc-name">FAM MSCI ACWI Cyber Security</div><div class="pc-isin">IE000VYO9NT0</div></div><div class="pc-badge">FAMMAI.MI</div></div><div class="pc-rows"><div class="pc-row"><span class="lbl">Focus</span><span class="val">Cyber Security Globale</span></div><div class="pc-row"><span class="lbl">SFDR</span><span class="val">Art. 8</span></div><div class="pc-row"><span class="lbl">Performance</span><span class="val gold">Aggiornare da Morningstar</span></div></div></div>
+    <div class="prod-card"><div class="pc-header"><div><div class="pc-name">FAM Active Portfolios 100% Equity</div><div class="pc-isin">IE000CB2BST9</div></div><div class="pc-badge">ACTEI.MI</div></div><div class="pc-rows"><div class="pc-row"><span class="lbl">Focus</span><span class="val">Multi-asset Equity Attivo</span></div><div class="pc-row"><span class="lbl">SFDR</span><span class="val">Art. 8</span></div><div class="pc-row"><span class="lbl">Performance</span><span class="val gold">Aggiornare da Morningstar</span></div></div></div>
+  </div>
+
+  <div class="sec-title">LONGEVITY TARGET DATE — PAC Previdenziale</div>
+  <div class="card-grid">
+    <div class="prod-card"><div class="pc-header"><div><div class="pc-name">FAM Longevity 2040</div><div class="pc-isin">IE000HBO10F2</div></div><div class="pc-badge" style="background:rgba(88,166,255,.15);color:var(--blue);border-color:rgba(88,166,255,.3)">2040</div></div><div class="pc-rows"><div class="pc-row"><span class="lbl">Tipo</span><span class="val">Target-date Fund</span></div><div class="pc-row"><span class="lbl">SFDR</span><span class="val">Art. 8</span></div><div class="pc-row"><span class="lbl">Sottoscrizione</span><span class="val">PAC aperto</span></div><div class="pc-row"><span class="lbl">Orizzonte</span><span class="val gold">~14 anni (2040)</span></div></div></div>
+    <div class="prod-card"><div class="pc-header"><div><div class="pc-name">FAM Longevity 2050</div><div class="pc-isin">IE000687IWU9</div></div><div class="pc-badge" style="background:rgba(88,166,255,.15);color:var(--blue);border-color:rgba(88,166,255,.3)">2050</div></div><div class="pc-rows"><div class="pc-row"><span class="lbl">Tipo</span><span class="val">Target-date Fund</span></div><div class="pc-row"><span class="lbl">SFDR</span><span class="val">Art. 8</span></div><div class="pc-row"><span class="lbl">Sottoscrizione</span><span class="val">PAC aperto</span></div><div class="pc-row"><span class="lbl">Orizzonte</span><span class="val gold">~24 anni (2050)</span></div></div></div>
+    <div class="prod-card"><div class="pc-header"><div><div class="pc-name">FAM Longevity 2060</div><div class="pc-isin">IE00046NG245</div></div><div class="pc-badge" style="background:rgba(88,166,255,.15);color:var(--blue);border-color:rgba(88,166,255,.3)">2060</div></div><div class="pc-rows"><div class="pc-row"><span class="lbl">Tipo</span><span class="val">Target-date Fund</span></div><div class="pc-row"><span class="lbl">SFDR</span><span class="val">Art. 8</span></div><div class="pc-row"><span class="lbl">Sottoscrizione</span><span class="val">PAC aperto</span></div><div class="pc-row"><span class="lbl">Orizzonte</span><span class="val gold">~34 anni (2060)</span></div></div></div>
+  </div>
+
+  <div class="sec-title">STRUTTURATI A CAPITALE PROTETTO — Smart Global Defence</div>
+  <div class="card-grid">
+    <div class="prod-card" style="border-color:rgba(200,168,80,.4)">
+      <div class="pc-header"><div><div class="pc-name">Smart Global Defence Multi-Strategy 7Y II</div><div class="pc-isin">IE000EBZZRX8</div></div><div class="pc-badge">SGD 7Y</div></div>
+      <div class="pc-rows">
+        <div class="pc-row"><span class="lbl">Durata</span><span class="val gold">7 anni</span></div>
+        <div class="pc-row"><span class="lbl">Capitale</span><span class="val" style="color:var(--green)">100% protezione a scadenza</span></div>
+        <div class="pc-row"><span class="lbl">Cedola</span><span class="val">Condizionale (verify brochure)</span></div>
+        <div class="pc-row"><span class="lbl">Sottostante</span><span class="val">Multi-Strategy Global Defence</span></div>
+      </div>
+      <div class="pc-divider"></div>
+      <button class="calc-btn" style="font-size:11px;padding:8px;" onclick="showTab('calcolatore')">🧮 Vai al Calcolatore →</button>
+    </div>
+    <div class="prod-card" style="border-color:rgba(200,168,80,.4)">
+      <div class="pc-header"><div><div class="pc-name">Smart Global Defence Callable 6Y</div><div class="pc-isin">IE0009P4R7N3</div></div><div class="pc-badge">SGD 6Y</div></div>
+      <div class="pc-rows">
+        <div class="pc-row"><span class="lbl">Durata</span><span class="val gold">6+ anni (callable)</span></div>
+        <div class="pc-row"><span class="lbl">Capitale</span><span class="val" style="color:var(--green)">100% protezione a scadenza</span></div>
+        <div class="pc-row"><span class="lbl">Cedola</span><span class="val">Condizionale</span></div>
+        <div class="pc-row"><span class="lbl">Note</span><span class="val" style="color:var(--orange)">Emittente può rimborsare after Y6</span></div>
+      </div>
+      <div class="pc-divider"></div>
+      <button class="calc-btn" style="font-size:11px;padding:8px;" onclick="showTab('calcolatore')">🧮 Vai al Calcolatore →</button>
+    </div>
+    <div class="prod-card" style="border-color:rgba(88,166,255,.4)">
+      <div class="pc-header"><div><div class="pc-name">FAM ELTIF Private Equity</div><div class="pc-isin">IE000S05LRX4</div></div><div class="pc-badge" style="background:rgba(88,166,255,.15);color:var(--blue);border-color:rgba(88,166,255,.3)">ELTIF 2.0</div></div>
+      <div class="pc-rows">
+        <div class="pc-row"><span class="lbl">Tipo</span><span class="val">Private Equity Illiquido</span></div>
+        <div class="pc-row"><span class="lbl">Orizzonte</span><span class="val gold">10+ anni</span></div>
+        <div class="pc-row"><span class="lbl">Partner</span><span class="val">Neuberger Berman</span></div>
+        <div class="pc-row"><span class="lbl">Accesso</span><span class="val" style="color:var(--orange)">Finestre limitate</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ TAB: CALCOLATORE ════ -->
+<div class="section" id="sec-calcolatore">
+  <div class="calc-grid">
+    <div class="calc-card">
+      <h3>🔐 Smart Global Defence — Simulatore Cedola</h3>
+      <div class="form-group">
+        <label>Prodotto</label>
+        <select id="calcProdotto" onchange="updateCalcLabel()">
+          <option value="7">SGD Multi-Strategy 7Y II (IE000EBZZRX8)</option>
+          <option value="6">SGD Callable after 6Y (IE0009P4R7N3)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Capitale Investito (€)</label>
+        <input type="number" id="calcCapitale" value="50000" min="1000" step="1000">
+      </div>
+      <div class="form-group">
+        <label>Tasso Cedola Annua % (da brochure)</label>
+        <input type="number" id="calcTasso" value="5.0" min="0" max="20" step="0.1">
+      </div>
+      <div class="form-group">
+        <label>Anni simulazione</label>
+        <input type="number" id="calcAnni" value="7" min="1" max="10" step="1">
+      </div>
+      <button class="calc-btn" onclick="calcolaStrutturato()">🧮 Calcola Cedole</button>
+      <p style="font-size:10px;color:var(--muted);margin-top:8px;">⚠️ Le cedole degli strutturati sono CONDIZIONALI. Calcolo puramente indicativo, non garantisce rendimento effettivo.</p>
+      <div class="calc-result" id="resultStrutturato" style="display:none"></div>
+    </div>
+
+    <div class="calc-card">
+      <h3>📈 PAC Longevity — Simulatore Rendimento</h3>
+      <div class="form-group">
+        <label>Fondo Target</label>
+        <select id="calcFondo">
+          <option value="2040">Longevity 2040 (IE000HBO10F2)</option>
+          <option value="2050">Longevity 2050 (IE000687IWU9)</option>
+          <option value="2060">Longevity 2060 (IE00046NG245)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Versamento mensile (€)</label>
+        <input type="number" id="calcMensile" value="500" min="50" step="50">
+      </div>
+      <div class="form-group">
+        <label>Rendimento annuo assunto %</label>
+        <input type="number" id="calcRend" value="4.0" min="0" max="15" step="0.5">
+      </div>
+      <button class="calc-btn" onclick="calcolaPAC()">🧮 Calcola PAC</button>
+      <p style="font-size:10px;color:var(--muted);margin-top:8px;">⚠️ Stima indicativa con capitalizzazione mensile. Rendimento non garantito. Non costituisce consulenza finanziaria.</p>
+      <div class="calc-result" id="resultPAC" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="calc-card" style="margin-top:0">
+    <h3>💰 Calcolatore Cedola Obbligazione</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;">
+      <div class="form-group">
+        <label>Capitale nominale (€)</label>
+        <input type="number" id="bondCapitale" value="10000" min="1000" step="1000">
+      </div>
+      <div class="form-group">
+        <label>Cedola annua %</label>
+        <input type="number" id="bondCedola" value="3.25" min="0" max="20" step="0.01">
+      </div>
+      <div class="form-group">
+        <label>Frequenza</label>
+        <select id="bondFreq">
+          <option value="1">Annuale</option>
+          <option value="2">Semestrale</option>
+          <option value="4">Trimestrale</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Anni al rimborso</label>
+        <input type="number" id="bondAnni" value="5" min="1" max="30" step="1">
+      </div>
+    </div>
+    <button class="calc-btn" style="max-width:300px" onclick="calcolaBond()">🧮 Calcola Rendimento</button>
+    <div class="calc-result" id="resultBond" style="display:none;margin-top:14px;"></div>
+  </div>
+</div>
+
+<!-- ════ TAB: SCADENZARIO ════ -->
+<div class="section" id="sec-scadenzario">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center;">
+    <span style="font-size:12px;color:var(--muted)">Filtra:</span>
+    <button class="filter-btn active" onclick="filterScad('all',this)">Tutti</button>
+    <button class="filter-btn" onclick="filterScad('scad',this)">Solo Scadenze</button>
+    <button class="filter-btn" onclick="filterScad('call',this)">Solo Call</button>
+  </div>
+  <div id="scadenzarioList"></div>
+</div>
+
+<!-- ════ TAB: MACRO CONTEXT ════ -->
+<div class="section" id="sec-macro">
+  <div class="sec-title">🌍 SCENARIO MACRO — ETF Box Intermonte, Gennaio 2026</div>
+  <div class="macro-grid">
+    <div class="macro-card">
+      <div class="mc-title">📌 Tema Principale</div>
+      <div class="mc-body"><strong>2026: La Geopolitica Entra nel Vivo</strong><br>Scenario dominato da Trump (Venezuela, Iran), candidatura Kevin Warsh alla FED (hawkish), Banca del Giappone stabile, elezioni giapponesi 8 febbraio. Rialzo difesa europea post-vertice ReArm Europe.</div>
+    </div>
+    <div class="macro-card">
+      <div class="mc-title">⚡ Raccomandazione Strategica</div>
+      <div class="mc-body">Ingresso in <strong>Terre Rare</strong> (RARE — IE000KHX90X6) per <strong>30–60 giorni</strong>. Supportato da demand strutturale da transizione energetica e tensioni geopolitiche sui critical minerals. YTD già +18.35%.</div>
+    </div>
+    <div class="macro-card">
+      <div class="mc-title">🔄 Flussi di Mercato</div>
+      <div class="flow-grid">
+        <div class="flow-in">
+          <div class="flow-lbl">📥 Acquisti</div>
+          <div class="flow-item">Europa equity</div>
+          <div class="flow-item">USA equity</div>
+          <div class="flow-item">Financials EU</div>
+          <div class="flow-item">Industrials EU</div>
+          <div class="flow-item">Technology US</div>
+          <div class="flow-item">Oro (Gold)</div>
+        </div>
+        <div class="flow-out">
+          <div class="flow-lbl">📤 Vendite</div>
+          <div class="flow-item">Cina equity</div>
+          <div class="flow-item">Nordics equity</div>
+          <div class="flow-item">Argento (Silver)</div>
+        </div>
+      </div>
+    </div>
+    <div class="macro-card">
+      <div class="mc-title">📊 Asset Allocation Target (1M)</div>
+      <div class="mc-body" style="margin-top:6px;">
+        <div style="margin-bottom:4px;display:flex;justify-content:space-between;"><span>Liquidità</span><strong>20%</strong></div>
+        <div style="background:var(--border);height:4px;border-radius:4px;margin-bottom:8px;"><div style="background:var(--muted);height:4px;border-radius:4px;width:20%"></div></div>
+        <div style="margin-bottom:4px;display:flex;justify-content:space-between;"><span>Equity (Growth 25% + Terre Rare)</span><strong>35%</strong></div>
+        <div style="background:var(--border);height:4px;border-radius:4px;margin-bottom:8px;"><div style="background:var(--blue);height:4px;border-radius:4px;width:35%"></div></div>
+        <div style="margin-bottom:4px;display:flex;justify-content:space-between;"><span>Fixed Income</span><strong>27.5%</strong></div>
+        <div style="background:var(--border);height:4px;border-radius:4px;margin-bottom:8px;"><div style="background:var(--green);height:4px;border-radius:4px;width:27.5%"></div></div>
+        <div style="margin-bottom:4px;display:flex;justify-content:space-between;"><span>Commodities &amp; Gold</span><strong>17.5%</strong></div>
+        <div style="background:var(--border);height:4px;border-radius:4px;"><div style="background:var(--gold);height:4px;border-radius:4px;width:17.5%"></div></div>
+      </div>
+    </div>
+    <div class="macro-card">
+      <div class="mc-title">🏦 Portafoglio Modello (Intermonte dic 2025)</div>
+      <div class="mc-body">
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);"><span>Yield</span><strong style="color:var(--gold)">3.20%</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);"><span>Duration media</span><strong>2.69 anni</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);"><span>Cedola media</span><strong>2.10%</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);"><span>Peso EUR</span><strong>80%</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;"><span>Peso USD</span><strong>20%</strong></div>
+      </div>
+    </div>
+    <div class="macro-card">
+      <div class="mc-title">⚠️ Risk Watch</div>
+      <div class="mc-body">
+        <div style="padding:4px 0;border-bottom:1px solid var(--border);"><strong>Kevin Warsh FED:</strong> eventuale nomina hawkish → pressione su bond lunghi USD</div>
+        <div style="padding:4px 0;border-bottom:1px solid var(--border);"><strong>Trump/Venezuela/Iran:</strong> volatilità su commodities e geopolitico</div>
+        <div style="padding:4px 0;border-bottom:1px solid var(--border);"><strong>BoJ:</strong> rischio rialzo tassi → JPY rafforzamento</div>
+        <div style="padding:4px 0;"><strong>Cina:</strong> DeepSeek AI → re-pricing tech US, cautela su Hang Seng</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ═══════════════════════════ TABS ═══════════════════════════
+function showTab(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  const tabs={'overview':0,'bonds':1,'bonds-usd':2,'etf':3,'prodotti':4,'calcolatore':5,'scadenzario':6,'macro':7};
+  document.querySelectorAll('.tab-btn')[tabs[id]].classList.add('active');
+  if(id==='scadenzario') renderScadenzario();
+}
+
+// ═══════════════════════════ DATE ═══════════════════════════
+function setToday(){
+  const d=new Date();
+  document.getElementById('dateBadge').textContent=
+    d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
+}
+
+// ═══════════════════════════ SEARCH/FILTER ═══════════════════════════
+function filterTable(tableId,query){
+  const rows=document.getElementById(tableId).querySelectorAll('tbody tr');
+  const q=query.toLowerCase();
+  rows.forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';});
+}
+function filterByTag(tableId,tag,btn,groupId){
+  document.querySelectorAll('#'+groupId+' .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const rows=document.getElementById(tableId).querySelectorAll('tbody tr');
+  rows.forEach(r=>{r.style.display=(tag===''||r.textContent.includes(tag))?'':'none';});
+}
+
+// ═══════════════════════════ CALCOLATORI ═══════════════════════════
+function calcolaStrutturato(){
+  const cap=parseFloat(document.getElementById('calcCapitale').value)||50000;
+  const tasso=parseFloat(document.getElementById('calcTasso').value)/100||0.05;
+  const anni=parseInt(document.getElementById('calcAnni').value)||7;
+  const prodotto=document.getElementById('calcProdotto').value;
+
+  const cedolaLorda=cap*tasso;
+  const ritenuta=cedolaLorda*0.26;
+  const cedolaNetta=cedolaLorda-ritenuta;
+  const totLordo=cedolaLorda*anni;
+  const totNetto=cedolaNetta*anni;
+  const rendNettoTot=(totNetto/cap)*100;
+
+  const r=document.getElementById('resultStrutturato');
+  r.style.display='block';
+  r.innerHTML=`
+    <div class="r-row"><span class="r-lbl">Prodotto</span><span class="r-val">${prodotto==='7'?'SGD 7Y II':'SGD Callable 6Y'}</span></div>
+    <div class="r-row"><span class="r-lbl">Capitale investito</span><span class="r-val">€ ${cap.toLocaleString('it-IT',{minimumFractionDigits:2})}</span></div>
+    <div class="r-row"><span class="r-lbl">Cedola annua lorda</span><span class="r-val">€ ${cedolaLorda.toLocaleString('it-IT',{minimumFractionDigits:2})}</span></div>
+    <div class="r-row"><span class="r-lbl">Ritenuta 26% (stima)</span><span class="r-val orange">- € ${ritenuta.toLocaleString('it-IT',{minimumFractionDigits:2})}</span></div>
+    <div class="r-row"><span class="r-lbl">Cedola netta annua</span><span class="r-val green">€ ${cedolaNetta.toLocaleString('it-IT',{minimumFractionDigits:2})}</span></div>
+    <div class="r-row"><span class="r-lbl">Totale netto ${anni} anni</span><span class="r-val">€ ${totNetto.toLocaleString('it-IT',{minimumFractionDigits:2})}</span></div>
+    <div class="r-row"><span class="r-lbl">Rendimento netto totale</span><span class="r-val green">${rendNettoTot.toFixed(2)}%</span></div>
+    <div class="r-row"><span class="r-lbl">Capitale a scadenza</span><span class="r-val green">€ ${cap.toLocaleString('it-IT',{minimumFractionDigits:2})} (protetto 100%)</span></div>
+  `;
+  r.innerHTML+='<p class="disclaimer">⚠️ Cedola CONDIZIONALE: l\'effettivo pagamento dipende dalle condizioni del sottostante. La protezione del capitale è garantita solo a scadenza se detenuto. Non costituisce consulenza finanziaria.</p>';
+}
+
+function calcolaPAC(){
+  const mensile=parseFloat(document.getElementById('calcMensile').value)||500;
+  const rend=parseFloat(document.getElementById('calcRend').value)/100||0.04;
+  const fondo=document.getElementById('calcFondo').value;
+  const annoTarget=parseInt(fondo);
+  const anni=annoTarget-new Date().getFullYear();
+  const mesi=anni*12;
+  const rMensile=rend/12;
+  const valFuturo=mensile*((Math.pow(1+rMensile,mesi)-1)/rMensile)*(1+rMensile);
+  const versato=mensile*mesi;
+  const guadagno=valFuturo-versato;
+
+  const r=document.getElementById('resultPAC');
+  r.style.display='block';
+  r.innerHTML=`
+    <div class="r-row"><span class="r-lbl">Fondo target</span><span class="r-val">Longevity ${fondo}</span></div>
+    <div class="r-row"><span class="r-lbl">Anni al target</span><span class="r-val">${anni} anni (${mesi} versamenti)</span></div>
+    <div class="r-row"><span class="r-lbl">Versamento mensile</span><span class="r-val">€ ${mensile.toLocaleString('it-IT')}</span></div>
+    <div class="r-row"><span class="r-lbl">Totale versato</span><span class="r-val orange">€ ${versato.toLocaleString('it-IT',{maximumFractionDigits:0})}</span></div>
+    <div class="r-row"><span class="r-lbl">Valore stimato finale *</span><span class="r-val green">€ ${valFuturo.toLocaleString('it-IT',{maximumFractionDigits:0})}</span></div>
+    <div class="r-row"><span class="r-lbl">Guadagno stimato</span><span class="r-val green">€ ${guadagno.toLocaleString('it-IT',{maximumFractionDigits:0})}</span></div>
+    <div class="r-row"><span class="r-lbl">Rendimento assunto</span><span class="r-val">${(rend*100).toFixed(1)}% annuo</span></div>
+  `;
+  r.innerHTML+='<p class="disclaimer">* Stima con capitalizzazione mensile composta. Rendimento non garantito. Il valore reale dipende dall\'andamento del mercato.</p>';
+}
+
+function calcolaBond(){
+  const cap=parseFloat(document.getElementById('bondCapitale').value)||10000;
+  const cedAnn=parseFloat(document.getElementById('bondCedola').value)/100||0.0325;
+  const freq=parseInt(document.getElementById('bondFreq').value)||1;
+  const anni=parseInt(document.getElementById('bondAnni').value)||5;
+
+  const cedPerPeriodo=cap*cedAnn/freq;
+  const numPeriodi=anni*freq;
+  const totLordo=cedPerPeriodo*numPeriodi;
+  const totNetto=totLordo*0.74;
+  const rendNetto=(totNetto/cap)*100;
+  const rendNettoAnn=rendNetto/anni;
+  const freqLabel={1:'Annuale',2:'Semestrale',4:'Trimestrale'}[freq];
+
+  const r=document.getElementById('resultBond');
+  r.style.display='block';
+  r.innerHTML=`
+    <div class="r-row"><span class="r-lbl">Cedola per periodo (${freqLabel})</span><span class="r-val">€ ${cedPerPeriodo.toFixed(2)}</span></div>
+    <div class="r-row"><span class="r-lbl">Numero periodi</span><span class="r-val">${numPeriodi}</span></div>
+    <div class="r-row"><span class="r-lbl">Totale cedole lordo</span><span class="r-val">€ ${totLordo.toFixed(2)}</span></div>
+    <div class="r-row"><span class="r-lbl">Ritenuta 26% totale</span><span class="r-val orange">- € ${(totLordo*0.26).toFixed(2)}</span></div>
+    <div class="r-row"><span class="r-lbl">Totale netto ricevuto</span><span class="r-val green">€ ${totNetto.toFixed(2)}</span></div>
+    <div class="r-row"><span class="r-lbl">Rendimento netto totale</span><span class="r-val green">${rendNetto.toFixed(2)}%</span></div>
+    <div class="r-row"><span class="r-lbl">Rendimento netto annuo</span><span class="r-val green">${rendNettoAnn.toFixed(2)}% / anno</span></div>
+    <div class="r-row"><span class="r-lbl">Capitale a scadenza</span><span class="r-val">€ ${cap.toLocaleString('it-IT',{minimumFractionDigits:2})}</span></div>
+  `;
+}
+
+// ═══════════════════════════ SCADENZARIO ═══════════════════════════
+const scadData=[
+  {anno:2026,isin:'IT0005454241',emit:'BTPS',tipo:'BTP Standard',ced:'0.00%',ccy:'EUR',ev:'scad',note:''},
+  {anno:2026,isin:'XS2470196002',emit:'Goldman Sachs GP',tipo:'Bond USD',ced:'3.45%',ccy:'USD',ev:'scad',note:''},
+  {anno:2026,isin:'XS1318212633',emit:'GS International',tipo:'Bond USD',ced:'4.00%',ccy:'USD',ev:'scad',note:''},
+  {anno:2026,isin:'XS2398918024',emit:'European Invt Bk',tipo:'Bond GBP',ced:'0.875%',ccy:'GBP',ev:'scad',note:''},
+  {anno:2026,isin:'FR0013476090',emit:'RCI Banque',tipo:'Corp EUR',ced:'1.125%',ccy:'EUR',ev:'call',note:'Next call 15/10/2026'},
+  {anno:2027,isin:'IT0005390874',emit:'BTPS',tipo:'BTP',ced:'0.85%',ccy:'EUR',ev:'scad',note:''},
+  {anno:2027,isin:'XS1610707850',emit:'Goldman Sachs GP',tipo:'Corp USD',ced:'3.50%',ccy:'USD',ev:'scad',note:'📌 Port. Intermonte'},
+  {anno:2027,isin:'IT0005490955',emit:'Mediobanca SPA',tipo:'Corp USD',ced:'3.00%',ccy:'USD',ev:'scad',note:'📌 Port. Intermonte'},
+  {anno:2027,isin:'XS1718418103',emit:'BASF SE',tipo:'Corp EUR',ced:'0.875%',ccy:'EUR',ev:'call',note:'Next call 15/08/2027'},
+  {anno:2027,isin:'DE000A2GSLY0',emit:'Daimler AG',tipo:'Corp EUR',ced:'1.00%',ccy:'EUR',ev:'scad',note:''},
+  {anno:2027,isin:'XS2018637327',emit:'Heidelberg Matr',tipo:'Corp EUR',ced:'1.125%',ccy:'EUR',ev:'call',note:'Next call 01/09/2027'},
+  {anno:2027,isin:'IT0005507832',emit:'Mediobanca SPA',tipo:'Corp EUR',ced:'2.90%',ccy:'EUR',ev:'scad',note:'⭐ Nuova'},
+  {anno:2027,isin:'US037833CX61',emit:'Apple Inc',tipo:'Corp USD',ced:'3.00%',ccy:'USD',ev:'call',note:'Next call 20/03/2027'},
+  {anno:2028,isin:'IT0005425761',emit:'BTP Futura',tipo:'BTP Futura',ced:'0.60%',ccy:'EUR',ev:'scad',note:'📌 Port. Intermonte'},
+  {anno:2028,isin:'XS2447564332',emit:'BMW Finance NV',tipo:'Corp EUR',ced:'1.00%',ccy:'EUR',ev:'scad',note:''},
+  {anno:2028,isin:'XS1861206636',emit:'Goldman Sachs GP',tipo:'Corp EUR',ced:'2.00%',ccy:'EUR',ev:'scad',note:''},
+  {anno:2028,isin:'IT0005493652',emit:'Mediobanca SPA',tipo:'Corp EUR',ced:'2.10%',ccy:'EUR',ev:'scad',note:''},
+  {anno:2028,isin:'XS3075491152',emit:'BMW Finance NV',tipo:'Corp EUR',ced:'2.625%',ccy:'EUR',ev:'scad',note:''},
+  {anno:2028,isin:'EU000A3KWCF4',emit:'European Union',tipo:'Supranational',ced:'0.00%',ccy:'EUR',ev:'scad',note:'Zero coupon'},
+  {anno:2028,isin:'US172967LP48',emit:'Citigroup Inc',tipo:'Corp USD',ced:'3.668%',ccy:'USD',ev:'call',note:'Next call 24/07/2027'},
+  {anno:2029,isin:'XS2802891833',emit:'Porsche SE',tipo:'Corp EUR',ced:'3.75%',ccy:'EUR',ev:'scad',note:'📌 Port. Intermonte'},
+  {anno:2029,isin:'XS2750224201',emit:'Mediobanca SPA',tipo:'Corp EUR',ced:'3.10%',ccy:'EUR',ev:'scad',note:'📌 Port. Intermonte'},
+  {anno:2029,isin:'XS1828033834',emit:'Deutsche Tel Fin',tipo:'Corp EUR',ced:'2.00%',ccy:'EUR',ev:'scad',note:''},
+  {anno:2029,isin:'XS2294835017',emit:'Intesa Sanpaolo',tipo:'Corp USD',ced:'1.90%',ccy:'USD',ev:'scad',note:''},
+  {anno:2030,isin:'EU000A3L4C16',emit:'European Invt Bk',tipo:'Supranational',ced:'2.25%',ccy:'EUR',ev:'scad',note:'📌 Port. Intermonte'},
+  {anno:2030,isin:'FR00140106Z3',emit:'RCI Banque',tipo:'Corp EUR',ced:'3.375%',ccy:'EUR',ev:'call',note:'📌 Port. Intermonte | Next call 06/03/2030'},
+  {anno:2030,isin:'IT0005654642',emit:'BTPS',tipo:'BTP',ced:'2.70%',ccy:'EUR',ev:'scad',note:''},
+  {anno:2030,isin:'BE6276040431',emit:'AB InBev SA/NV',tipo:'Corp EUR',ced:'1.50%',ccy:'EUR',ev:'scad',note:''},
+  {anno:2030,isin:'DE000A289QR9',emit:'Daimler AG',tipo:'Corp EUR',ced:'0.75%',ccy:'EUR',ev:'scad',note:''},
+  {anno:2030,isin:'XS2374594823',emit:'Volksw Fin Servi',tipo:'Corp EUR',ced:'0.375%',ccy:'EUR',ev:'scad',note:''},
+  {anno:2030,isin:'US71647NBE85',emit:'Petrobras Glob',tipo:'Corp USD HY',ced:'5.093%',ccy:'USD',ev:'scad',note:'⚠️ HY'},
+  {anno:2030,isin:'US40434LAC90',emit:'HP Inc',tipo:'Corp USD',ced:'3.40%',ccy:'USD',ev:'call',note:'Next call 17/03/2030'},
+  {anno:2031,isin:'XS1183208328',emit:'European Invt Bk',tipo:'Supranational',ced:'1.00%',ccy:'EUR',ev:'scad',note:'📌 Port. Intermonte'},
+  {anno:2031,isin:'XS3075490188',emit:'BMW Finance NV',tipo:'Corp EUR',ced:'3.25%',ccy:'EUR',ev:'scad',note:''},
+  {anno:2031,isin:'DE000A4EB2Y0',emit:'Mercedes-Benz',tipo:'Corp EUR',ced:'3.125%',ccy:'EUR',ev:'scad',note:''},
+  {anno:2031,isin:'DE000A383P48',emit:'KFW',tipo:'Corp EUR/AAA',ced:'2.50%',ccy:'EUR',ev:'scad',note:''},
+  {anno:2032,isin:'XS3280519078',emit:'BMW Finance NV',tipo:'Corp EUR',ced:'3.25%',ccy:'EUR',ev:'scad',note:'⭐ Nuova'},
+  {anno:2033,isin:'IT0005466351',emit:'BTP Futura',tipo:'BTP Futura',ced:'1.35%',ccy:'EUR',ev:'scad',note:'📌 Port. + ISINificio | Step-up'},
+  {anno:2037,isin:'IT0003934657',emit:'BTPS',tipo:'BTP',ced:'4.00%',ccy:'EUR',ev:'scad',note:''},
+];
+
+let scadFilter='all';
+function filterScad(f,btn){
+  scadFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderScadenzario();
+}
+
+function renderScadenzario(){
+  const container=document.getElementById('scadenzarioList');
+  const anni=[...new Set(scadData.map(d=>d.anno))];
+  let html='';
+  anni.forEach(anno=>{
+    const items=scadData.filter(d=>d.anno===anno&&(scadFilter==='all'||scadFilter===d.ev));
+    if(!items.length)return;
+    html+=`<div class="scad-year"><div class="scad-year-hdr">${anno} · ${items.length} evento${items.length>1?'i':''}</div>`;
+    items.forEach(it=>{
+      html+=`<div class="scad-item">
+        <span class="scad-type ${it.ev}">${it.ev==='scad'?'SCADENZA':'CALL'}</span>
+        <span class="scad-isin">${it.isin}</span>
+        <span class="scad-emitt">${it.emit}</span>
+        <span class="scad-ced">${it.ced}</span>
+        <span class="scad-ccy">${it.ccy}</span>
+        ${it.note?`<span class="scad-note">${it.note}</span>`:''}
+      </div>`;
+    });
+    html+='</div>';
+  });
+  container.innerHTML=html;
+}
+
+// ═══════════════════════════ CHARTS ═══════════════════════════
+window.addEventListener('DOMContentLoaded',()=>{
+  // Grafico Asset Allocation
+  const ctx1=document.getElementById('chartAlloc').getContext('2d');
+  new Chart(ctx1,{
+    type:'doughnut',
+    data:{
+      labels:['Liquidità 20%','Equity 35%','Fixed Income 27.5%','Commodities & Gold 17.5%'],
+      datasets:[{
+        data:[20,35,27.5,17.5],
+        backgroundColor:['#8b949e','#58a6ff','#39d353','#C8A850'],
+        borderColor:'#111827',
+        borderWidth:2,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:'#e6edf3',font:{size:10},boxWidth:12},position:'bottom'},
+        tooltip:{callbacks:{label:ctx=>`${ctx.label}`}}
+      }
+    }
+  });
+
+  // Grafico ETF top performance YTD
+  const ctx2=document.getElementById('chartEtfTop').getContext('2d');
+  new Chart(ctx2,{
+    type:'bar',
+    data:{
+      labels:['NCLR\nNucleare','RARE\nTerre Rare','NUCL\nNucleare','METL\nMetalli','WDEF\nDifesa','SGLE\nOro','PHAU\nOro'],
+      datasets:[{
+        label:'Performance YTD %',
+        data:[32.72,18.35,20.27,17.09,17.48,14.28,14.77],
+        backgroundColor:['#39d353','#bc8cff','#39d353','#C8A850','#58a6ff','#C8A850','#C8A850'],
+        borderRadius:6,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`+${ctx.raw}%`}}},
+      scales:{
+        x:{ticks:{color:'#8b949e',callback:v=>`${v}%`},grid:{color:'#1e2d42'}},
+        y:{ticks:{color:'#e6edf3',font:{size:10}},grid:{display:false}}
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>
