@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0,user-scalable=yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Le Tue Opportunità · FinecoBank Private Banking</title>
+<meta name="description" content="Simula i tuoi investimenti con Vincenzo Cuomo, Private Banker FinecoBank. Protezione del capitale, cedole agevolate al 14,5%, Fido Agevolato e private equity.">
+<meta property="og:title" content="Le Tue Opportunità di Investimento · FinecoBank">
+<meta property="og:description" content="Scopri Smart Defence, Longevity, Private Equity e il Fido Agevolato. Simula il tuo capitale e i rendimenti in pochi secondi. Esclusivo FinecoBank Private Banking.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Le Tue Opportunità di Investimento · FinecoBank">
+<meta name="twitter:description" content="Simula i tuoi investimenti con Vincenzo Cuomo, Private Banker FinecoBank.">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   THEME VARIABLES
+═══════════════════════════════════════ */
+[data-theme="dark"]{
+  --bg:#001833;--bg2:#0A1E3A;--bg3:#0D2548;--bg4:#1A3A60;
+  --primary:#0055CC;--primary2:#0044AA;--primary-soft:rgba(0,85,204,.15);
+  --accent:#FDB913;--accent2:#e6a800;--accent-soft:rgba(253,185,19,.14);
+  --green:#00C878;--green2:#009E5E;--green-soft:rgba(0,200,120,.12);
+  --red:#FF4F6E;--orange:#FF8C42;--cyan:#00D4FF;--purple:#9B6BFF;
+  --text:#F0F6FF;--text2:#8AABCC;--text3:#4A6A88;
+  --card:#0D2040;--border:#1C3D65;--border2:#0F2A4A;
+  --shadow:rgba(0,0,0,.4);
+}
+[data-theme="light"]{
+  --bg:#EEF4FF;--bg2:#FFFFFF;--bg3:#F5F9FF;--bg4:#DCE8FF;
+  --primary:#003399;--primary2:#002277;--primary-soft:rgba(0,51,153,.1);
+  --accent:#FDB913;--accent2:#E8A800;--accent-soft:rgba(253,185,19,.15);
+  --green:#007A3D;--green2:#00612F;--green-soft:rgba(0,122,61,.1);
+  --red:#C62828;--orange:#E65100;--cyan:#0077B6;--purple:#5C35B8;
+  --text:#1A2B4A;--text2:#4A6080;--text3:#7A90A8;
+  --card:#FFFFFF;--border:#C8D8F0;--border2:#E0EAF8;
+  --shadow:rgba(0,51,153,.12);
+}
+
+/* ═══════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:15px;line-height:1.55;min-height:100vh;
+  padding-bottom:80px;
+}
+a{color:var(--accent);text-decoration:none}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--primary);border-radius:2px}
+
+/* ═══════════════════════════════════════
+   TOPBAR
+═══════════════════════════════════════ */
+.topbar{
+  background:var(--primary2);
+  border-bottom:3px solid var(--accent);
+  padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:300;gap:10px;
+}
+[data-theme="light"] .topbar{background:var(--primary)}
+.topbar-brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo-circle{
+  width:40px;height:40px;min-width:40px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:900;color:var(--primary);
+  box-shadow:0 3px 10px rgba(253,185,19,.4);
+}
+.brand-name{font-size:14px;font-weight:700;color:#FFF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-sub{font-size:9.5px;color:var(--accent);letter-spacing:.09em;text-transform:uppercase;font-weight:600}
+.topbar-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.theme-toggle{
+  background:var(--primary-soft);border:1.5px solid var(--border);
+  border-radius:20px;padding:5px 11px;font-size:12px;font-weight:600;
+  color:var(--text);cursor:pointer;white-space:nowrap;transition:all .2s;
+}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:8px 14px;border-radius:8px;font-size:12px;font-weight:700;
+  cursor:pointer;border:none;transition:all .2s;text-decoration:none;
+  font-family:'Inter',sans-serif;white-space:nowrap;
+}
+.btn-accent{background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--primary);font-weight:800}
+.btn-accent:active{opacity:.85;transform:scale(.97)}
+.btn-outline{background:transparent;border:1.5px solid rgba(255,255,255,.3);color:#fff}
+[data-theme="light"] .btn-outline{border-color:var(--border);color:var(--text)}
+
+/* ═══════════════════════════════════════
+   HERO & CAPITAL WIDGET
+═══════════════════════════════════════ */
+.hero{
+  background:linear-gradient(160deg,var(--bg2) 0%,var(--bg) 100%);
+  border-bottom:1px solid var(--border);
+  padding:20px 16px 18px;
+}
+[data-theme="light"] .hero{background:linear-gradient(160deg,var(--primary) 0%,var(--primary2) 100%)}
+.hero-greeting{font-size:20px;font-weight:800;color:var(--text);margin-bottom:3px}
+[data-theme="light"] .hero-greeting{color:#FFF}
+.hero-sub{font-size:13px;color:var(--text2);margin-bottom:16px}
+[data-theme="light"] .hero-sub{color:rgba(255,255,255,.8)}
+.hero-sub span{color:var(--accent);font-weight:600}
+
+/* Capital widget */
+.capital-widget{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:14px;padding:16px;
+  box-shadow:0 4px 20px var(--shadow);
+}
+[data-theme="light"] .capital-widget{box-shadow:0 4px 20px var(--shadow);border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.95)}
+.cw-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+[data-theme="light"] .cw-label{color:var(--primary)}
+
+/* +/- controls for mobile */
+.cap-ctrl{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.cap-btn{
+  width:42px;height:42px;border-radius:10px;
+  background:var(--primary-soft);border:1.5px solid var(--border);
+  color:var(--text);font-size:22px;font-weight:300;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;flex-shrink:0;user-select:none;-webkit-user-select:none;
+}
+.cap-btn:active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);transform:scale(.94)}
+.cap-display{
+  flex:1;text-align:center;
+  font-size:28px;font-weight:800;color:var(--accent);
+  line-height:1;letter-spacing:-1px;
+}
+.cap-display span{font-size:14px;color:var(--text2);font-weight:500;margin-right:3px}
+.cap-slider{
+  width:100%;-webkit-appearance:none;appearance:none;
+  height:5px;border-radius:3px;
+  background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--pct,5%),var(--border) var(--pct,5%));
+  outline:none;cursor:pointer;margin:6px 0 10px;
+}
+.cap-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:22px;height:22px;border-radius:50%;
+  background:var(--accent);border:2px solid var(--bg);
+  cursor:pointer;box-shadow:0 2px 8px rgba(253,185,19,.5);
+}
+.cap-slider::-moz-range-thumb{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--accent);border:2px solid var(--bg);cursor:pointer;
+}
+.presets{display:flex;gap:6px;flex-wrap:wrap}
+.preset{
+  padding:5px 10px;border-radius:7px;
+  border:1.5px solid var(--border);background:transparent;
+  color:var(--text2);font-size:11px;font-weight:600;cursor:pointer;
+  transition:all .15s;font-family:'Inter',sans-serif;
+}
+.preset:active,.preset.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+
+/* ═══════════════════════════════════════
+   NAV TABS
+═══════════════════════════════════════ */
+.nav-tabs{
+  display:flex;background:var(--bg2);border-bottom:1px solid var(--border);
+  position:sticky;top:65px;z-index:200;overflow-x:auto;scrollbar-width:none;
+}
+.nav-tabs::-webkit-scrollbar{display:none}
+[data-theme="light"] .nav-tabs{background:var(--bg3)}
+.nav-tab{
+  padding:12px 16px;font-size:13px;font-weight:600;
+  color:var(--text2);cursor:pointer;border-bottom:2.5px solid transparent;
+  white-space:nowrap;transition:all .2s;flex-shrink:0;
+}
+.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.nav-tab:hover{color:var(--text)}
+
+/* ═══════════════════════════════════════
+   MAIN
+═══════════════════════════════════════ */
+.main{max-width:1100px;margin:0 auto;padding:20px 14px 20px}
+.tab-content{display:none}.tab-content.active{display:block}
+.sec-title{font-size:18px;font-weight:800;color:var(--text);margin-bottom:3px}
+.sec-sub{font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.5}
+.sec-sub b{color:var(--accent)}
+
+/* ═══════════════════════════════════════
+   PRODUCT GRID
+═══════════════════════════════════════ */
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-bottom:20px}
+.prod-card{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:14px;overflow:hidden;
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+}
+.prod-card:hover{transform:translateY(-2px);box-shadow:0 10px 36px var(--shadow)}
+.prod-card.featured{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent-soft)}
+.prod-card.pe-card{border-color:var(--orange);box-shadow:0 0 0 1px rgba(255,140,66,.2)}
+[data-theme="light"] .prod-card{box-shadow:0 2px 12px var(--shadow)}
+
+.prod-head{
+  background:linear-gradient(135deg,var(--bg3),var(--bg2));
+  padding:15px 15px 12px;border-bottom:1px solid var(--border);position:relative;
+}
+[data-theme="light"] .prod-head{background:linear-gradient(135deg,var(--bg4),var(--bg3))}
+.prod-card.featured .prod-head{background:linear-gradient(135deg,rgba(0,85,204,.2),var(--bg2))}
+.prod-card.pe-card .prod-head{background:linear-gradient(135deg,rgba(255,140,66,.15),var(--bg2))}
+[data-theme="light"] .prod-card.pe-card .prod-head{background:linear-gradient(135deg,rgba(255,140,66,.12),var(--bg3))}
+
+.ribbon{
+  position:absolute;top:0;right:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:var(--primary);font-size:9px;font-weight:800;
+  padding:4px 10px;border-radius:0 13px 0 8px;letter-spacing:.05em;
+}
+.pe-ribbon{background:linear-gradient(135deg,var(--orange),#cc6600)}
+.prod-icon{
+  width:42px;height:42px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:19px;flex-shrink:0;margin-bottom:9px;
+}
+.pi-blue{background:rgba(0,85,204,.18)}
+.pi-green{background:var(--green-soft)}
+.pi-gold{background:var(--accent-soft)}
+.pi-orange{background:rgba(255,140,66,.18)}
+.pi-purple{background:rgba(155,107,255,.18)}
+.pi-cyan{background:rgba(0,212,255,.15)}
+
+.prod-badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.badge{padding:3px 8px;border-radius:5px;font-size:10px;font-weight:700;letter-spacing:.03em}
+.b-prot{background:var(--green-soft);color:var(--green)}
+.b-tax{background:var(--accent-soft);color:var(--accent2)}
+.b-liq{background:rgba(0,212,255,.15);color:var(--cyan)}
+.b-new{background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--primary)}
+.b-hot{background:linear-gradient(135deg,var(--orange),#cc6600);color:#fff}
+[data-theme="light"] .b-prot{color:var(--green2)} [data-theme="light"] .b-tax{color:#8a6200}
+[data-theme="light"] .b-liq{color:var(--cyan)}
+
+.prod-name{font-size:14px;font-weight:800;color:var(--text);line-height:1.3;margin-bottom:3px}
+.prod-meta{font-size:10px;color:var(--text3);font-family:monospace}
+.prod-body{padding:14px 15px}
+
+/* ═══════════════════════════════════════
+   COUPON PILLS
+═══════════════════════════════════════ */
+.cpills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.cpill{
+  flex:1;min-width:60px;text-align:center;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:9px;padding:8px 6px;
+}
+.cpill .pct{font-size:20px;font-weight:800;color:var(--green);line-height:1}
+.cpill .lbl{font-size:9px;color:var(--text2);margin-top:2px;line-height:1.3}
+.cpill.prot{background:var(--green-soft);border-color:rgba(0,200,120,.3)}
+.cpill.prot .pct{color:var(--green)}
+
+/* ═══════════════════════════════════════
+   FEATURE LIST
+═══════════════════════════════════════ */
+.flist{list-style:none;margin-bottom:10px}
+.flist li{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:5px 0;border-bottom:1px solid var(--border2);
+  font-size:12.5px;color:var(--text2);line-height:1.45;
+}
+.flist li:last-child{border-bottom:none}
+.flist li .ic{font-size:14px;flex-shrink:0;margin-top:1px}
+.flist li b{color:var(--text)}
+
+/* ═══════════════════════════════════════
+   MINI CALC
+═══════════════════════════════════════ */
+.mcalc{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;padding:11px 13px;margin-top:10px;
+}
+.cr{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px}
+.cr .cl{color:var(--text2)}
+.cr .cv{font-weight:700;color:var(--text)}
+.cr .cv.g{color:var(--green)}
+.cr .cv.a{color:var(--accent)}
+.cr .cv.o{color:var(--orange)}
+.cdiv{border:none;border-top:1px solid var(--border);margin:5px 0}
+
+/* ═══════════════════════════════════════
+   HIGHLIGHT BOX
+═══════════════════════════════════════ */
+.hbox{
+  display:flex;align-items:flex-start;gap:9px;
+  border-radius:9px;padding:10px 12px;margin-top:9px;
+  font-size:12px;line-height:1.45;
+}
+.hbox.green{background:var(--green-soft);border:1px solid rgba(0,200,120,.25)}
+.hbox.gold{background:var(--accent-soft);border:1px solid rgba(253,185,19,.3)}
+.hbox.blue{background:var(--primary-soft);border:1px solid rgba(0,85,204,.3)}
+.hbox.orange{background:rgba(255,140,66,.1);border:1px solid rgba(255,140,66,.35)}
+[data-theme="light"] .hbox.green{background:rgba(0,122,61,.08);border-color:rgba(0,122,61,.25)}
+[data-theme="light"] .hbox.gold{background:rgba(253,185,19,.1);border-color:rgba(253,185,19,.35)}
+.hbox .hi{font-size:18px;flex-shrink:0}
+.hbox .ht{color:var(--text2)}
+.hbox .ht b{color:var(--text)}
+.hbox .ht strong{color:var(--green)}
+[data-theme="light"] .hbox .ht strong{color:var(--green2)}
+
+/* ═══════════════════════════════════════
+   PROGRESS BARS
+═══════════════════════════════════════ */
+.pbar-wrap{margin:6px 0}
+.pbar-lbl{display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px}
+.pbar-lbl .nm{color:var(--text2)}.pbar-lbl .vl{color:var(--text);font-weight:600}
+.pbar{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.pbf{height:100%;border-radius:3px;transition:width .8s ease}
+.pbf.g{background:linear-gradient(90deg,var(--green2),var(--green))}
+.pbf.b{background:linear-gradient(90deg,var(--primary2),var(--primary))}
+.pbf.a{background:linear-gradient(90deg,var(--accent2),var(--accent))}
+
+/* ═══════════════════════════════════════
+   RISK METER
+═══════════════════════════════════════ */
+.risk-row{display:flex;align-items:center;gap:6px;margin-top:10px}
+.risk-lbl{font-size:11px;color:var(--text2);flex-shrink:0}
+.risk-blocks{display:flex;gap:2px;flex:1}
+.rb{height:5px;border-radius:2px;flex:1}
+.rb.on{background:var(--green)}.rb.mid{background:var(--accent)}.rb.off{background:var(--bg4)}
+.risk-txt{font-size:10px;color:var(--text2);margin-left:4px;white-space:nowrap}
+
+/* ═══════════════════════════════════════
+   EXPAND
+═══════════════════════════════════════ */
+.exp-btn{
+  width:100%;background:transparent;border:none;
+  border-top:1px solid var(--border);color:var(--text2);
+  font-size:12px;padding:9px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  transition:color .2s;font-family:'Inter',sans-serif;
+}
+.exp-btn:hover{color:var(--accent)}
+.exp-body{display:none;padding:12px 15px;border-top:1px solid var(--border)}
+.exp-body.open{display:block}
+
+/* ═══════════════════════════════════════
+   CHART
+═══════════════════════════════════════ */
+.chart-wrap{position:relative;height:150px;margin-top:10px}
+
+/* ═══════════════════════════════════════
+   PRIVATE EQUITY SPECIAL SECTION
+═══════════════════════════════════════ */
+.pe-hero{
+  background:linear-gradient(135deg,rgba(255,140,66,.08) 0%,rgba(155,107,255,.06) 100%);
+  border:2px solid rgba(255,140,66,.4);
+  border-radius:14px;padding:18px;margin-bottom:12px;
+}
+.pe-hero-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.pe-hero-sub{font-size:12.5px;color:var(--text2);margin-bottom:14px;line-height:1.5}
+.pe-hero-sub b{color:var(--orange)}
+.ipo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:12px}
+.ipo-card{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;padding:10px;text-align:center;
+}
+.ipo-card .ic-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
+.ipo-card .ic-sub{font-size:10px;color:var(--text2);line-height:1.3}
+.ipo-card .ic-val{font-size:13px;font-weight:800;color:var(--green);margin-top:5px}
+.ipo-card .ic-status{
+  display:inline-block;font-size:9px;font-weight:700;
+  padding:2px 6px;border-radius:4px;margin-top:4px;
+}
+.status-hot{background:rgba(255,140,66,.2);color:var(--orange)}
+.status-in{background:var(--green-soft);color:var(--green)}
+[data-theme="light"] .status-in{color:var(--green2)}
+
+.return-viz{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:12px;padding:14px;margin-bottom:12px;
+}
+.rv-title{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:12px;text-transform:uppercase;letter-spacing:.07em}
+.rv-bar{position:relative;height:36px;background:var(--bg4);border-radius:8px;overflow:hidden;margin-bottom:8px}
+.rv-fill{
+  height:100%;display:flex;align-items:center;padding-left:10px;
+  font-size:12px;font-weight:700;color:var(--primary);
+  background:linear-gradient(90deg,var(--accent),#ffcc44);
+  border-radius:8px;transition:width 1s ease;
+}
+.rv-markers{display:flex;justify-content:space-between;font-size:10px;color:var(--text3)}
+.rv-big{text-align:center;margin-top:8px}
+.rv-big .mul{font-size:36px;font-weight:900;color:var(--orange);letter-spacing:-1px}
+.rv-big .sub{font-size:12px;color:var(--text2);margin-top:2px}
+
+/* ═══════════════════════════════════════
+   CREDIT LOMBARD
+═══════════════════════════════════════ */
+.lombard-section{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:14px;padding:20px;margin-bottom:20px;
+}
+.lb-header{
+  background:linear-gradient(135deg,var(--green-soft),var(--primary-soft));
+  border:1.5px solid rgba(0,200,120,.3);
+  border-radius:12px;padding:16px;margin-bottom:18px;
+}
+[data-theme="light"] .lb-header{background:linear-gradient(135deg,rgba(0,122,61,.06),rgba(0,51,153,.06))}
+.lb-title{font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:10px}
+.lb-sub{font-size:13px;color:var(--text2);line-height:1.5}
+.lb-sub b{color:var(--green)}
+[data-theme="light"] .lb-sub b{color:var(--green2)}
+.lb-benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+.lbb{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:9px;padding:10px;text-align:center;
+}
+.lbb .v{font-size:18px;font-weight:800;color:var(--green);margin-bottom:2px}
+.lbb .l{font-size:10px;color:var(--text2);line-height:1.3}
+[data-theme="light"] .lbb .v{color:var(--green2)}
+
+.lc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.lc-field label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;display:block;margin-bottom:5px}
+.lc-input{
+  width:100%;background:var(--bg3);border:1.5px solid var(--border);
+  border-radius:8px;color:var(--text);font-size:16px;font-weight:700;
+  padding:9px 11px;outline:none;transition:border .2s;font-family:'Inter',sans-serif;
+}
+.lc-input:focus{border-color:var(--accent)}
+[data-theme="light"] .lc-input{background:var(--bg3);color:var(--text)}
+.lc-slider{width:100%;height:4px;cursor:pointer;margin:6px 0;border-radius:2px;accent-color:var(--green)}
+.lc-hint{font-size:10px;color:var(--text3);margin-top:2px}
+.lb-results{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.lbr{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:9px;padding:11px;
+}
+.lbr .ll{font-size:9.5px;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.lbr .lv{font-size:17px;font-weight:800;color:var(--text)}
+.lbr .lv.g{color:var(--green)} .lbr .lv.o{color:var(--orange)} .lbr .lv.r{color:var(--red)}
+.lbr .ls{font-size:10px;color:var(--text3);margin-top:2px}
+[data-theme="light"] .lbr .lv.g{color:var(--green2)}
+
+.lb-strategy{
+  background:linear-gradient(135deg,var(--green-soft),rgba(0,85,204,.06));
+  border:1.5px solid rgba(0,200,120,.35);
+  border-radius:12px;padding:14px;margin-bottom:12px;
+}
+.ls-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px}
+.ls-sub{font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.45}
+.ls-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.lsn{text-align:center;background:var(--bg3);border-radius:8px;padding:9px 6px}
+.lsn .nv{font-size:15px;font-weight:800;color:var(--green)}
+.lsn .nl{font-size:9px;color:var(--text2);margin-top:2px;line-height:1.3}
+[data-theme="light"] .lsn .nv{color:var(--green2)}
+.ls-verdict{
+  display:flex;align-items:flex-start;gap:9px;
+  border-radius:9px;padding:10px 12px;
+  background:var(--green-soft);border:1px solid rgba(0,200,120,.3);
+  font-size:12px;line-height:1.45;
+}
+.ls-verdict .vi{font-size:18px}
+.ls-verdict .vt b{color:var(--text)}
+.ls-verdict .vt strong{color:var(--green)}
+[data-theme="light"] .ls-verdict .vt strong{color:var(--green2)}
+
+/* ═══════════════════════════════════════
+   PORTFOLIO TAB
+═══════════════════════════════════════ */
+.port-box{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:14px;padding:18px;margin-bottom:18px;
+}
+.pb-total{font-size:28px;font-weight:800;color:var(--accent);margin:4px 0}
+.pb-label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.07em}
+.alloc-wrap{display:grid;grid-template-columns:180px 1fr;gap:14px;align-items:center;margin:14px 0}
+.alloc-chart{position:relative;height:180px}
+.alloc-leg{display:flex;flex-direction:column;gap:5px}
+.al-item{display:flex;align-items:center;gap:7px;font-size:12px}
+.al-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.al-nm{color:var(--text2);flex:1}.al-pc{font-weight:700;color:var(--text)}
+.pb-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin:12px 0}
+.pbi{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:11px}
+.pbi .pn{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px}
+.pbi .pv{font-size:15px;font-weight:800;color:var(--accent);margin-bottom:2px}
+.pbi .pm{font-size:10px;color:var(--text2)}
+
+/* ═══════════════════════════════════════
+   FLOATING CONTACT BAR
+═══════════════════════════════════════ */
+.float-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:500;
+  background:var(--bg2);border-top:2px solid var(--accent);
+  padding:10px 16px;display:flex;gap:10px;align-items:center;
+  box-shadow:0 -4px 20px var(--shadow);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+[data-theme="light"] .float-bar{background:rgba(255,255,255,.97)}
+.float-btn{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 12px;border-radius:10px;border:none;cursor:pointer;
+  font-size:13px;font-weight:700;font-family:'Inter',sans-serif;
+  transition:all .15s;text-decoration:none;
+}
+.float-btn:active{transform:scale(.96)}
+.fb-call{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff}
+.fb-wa{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff}
+.float-bar-sub{font-size:9.5px;text-align:center;margin-top:2px;opacity:.7}
+/* ═══════════════════════════════════════
+   SHARE / PASSA PAROLA
+═══════════════════════════════════════ */
+.fb-share{background:linear-gradient(135deg,#FF6B35,#FF4500);color:#fff}
+.passa-parola{
+  background:linear-gradient(135deg,var(--accent-soft),var(--primary-soft));
+  border:1.5px solid var(--accent);border-radius:16px;
+  padding:20px;margin:16px 0;text-align:center;
+}
+.pp-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px}
+.pp-sub{font-size:12px;color:var(--text2);margin-bottom:16px;line-height:1.5}
+.pp-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.pp-btn{
+  display:flex;align-items:center;gap:8px;padding:11px 18px;
+  border-radius:10px;border:none;cursor:pointer;font-size:13px;
+  font-weight:700;font-family:'Inter',sans-serif;text-decoration:none;
+  transition:all .15s;
+}
+.pp-btn:active{transform:scale(.96)}
+.pp-wa{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff}
+.pp-email{background:var(--primary-soft);border:1.5px solid var(--border);color:var(--text)}
+.pp-copy{background:var(--bg3);border:1.5px solid var(--border);color:var(--text2)}
+[data-theme="light"] .pp-email{background:var(--bg4)}
+[data-theme="light"] .pp-copy{background:var(--bg3)}
+/* Toast */
+.share-toast{
+  position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--green);color:#fff;padding:10px 20px;border-radius:20px;
+  font-size:13px;font-weight:700;opacity:0;transition:all .3s;z-index:500;
+  white-space:nowrap;pointer-events:none;
+}
+.share-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* Capital change nudge */
+.sim-nudge{
+  display:none;font-size:11px;font-weight:600;color:var(--accent);
+  text-align:center;margin-top:6px;animation:fadeUp .3s ease;
+}
+
+
+/* ═══════════════════════════════════════
+   SEPARATOR & MISC
+═══════════════════════════════════════ */
+.sep{border:none;border-top:1px solid var(--border);margin:20px 0}
+.disc{font-size:10px;color:var(--text3);line-height:1.6;padding:12px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--border);margin-top:12px}
+.disc b{color:var(--text2)}
+
+/* ═══════════════════════════════════════
+   MOBILE RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:640px){
+  body{font-size:14px}
+  .topbar{padding:10px 12px}
+  .brand-name{font-size:13px}
+  .hero{padding:16px 12px 14px}
+  .hero-greeting{font-size:17px}
+  .main{padding:14px 10px 16px}
+  .prod-grid{grid-template-columns:1fr}
+  .lc-grid{grid-template-columns:1fr}
+  .lb-results{grid-template-columns:1fr 1fr}
+  .ls-nums{grid-template-columns:repeat(3,1fr)}
+  .alloc-wrap{grid-template-columns:1fr;gap:10px}
+  .alloc-chart{height:160px}
+  .pb-items{grid-template-columns:1fr 1fr}
+  .lb-benefits{grid-template-columns:1fr 1fr}
+  .ipo-grid{grid-template-columns:repeat(2,1fr)}
+  .cap-display{font-size:24px}
+  .float-btn{font-size:12px;padding:12px 8px}
+  .float-bar{padding:8px 12px;gap:8px}
+  .nav-tab{padding:10px 13px;font-size:12px}
+  .prod-head{padding:13px 13px 11px}
+  .prod-body{padding:12px 13px}
+  .theme-toggle{padding:5px 8px;font-size:11px}
+}
+@media(max-width:380px){
+  .lb-results{grid-template-columns:1fr}
+  .pb-items{grid-template-columns:1fr}
+  .cap-display{font-size:20px}
+  .lb-benefits{grid-template-columns:1fr 1fr}
+  .ipo-grid{grid-template-columns:repeat(2,1fr)}
+  .ls-nums{grid-template-columns:1fr 1fr}
+}
+
+/* ═══════════════════════════════════════
+   PRINT
+═══════════════════════════════════════ */
+@media print{
+  .float-bar,.topbar .btn,.theme-toggle,.nav-tabs{display:none!important}
+  .tab-content{display:block!important}
+  .exp-body{display:block!important}
+  body{padding-bottom:0;background:#fff;color:#000}
+  .prod-card,.lombard-section,.port-box{page-break-inside:avoid}
+  .prod-name,.sec-title,.hero-greeting{color:#000}
+  [data-theme="dark"] .hero{background:#003399}
+  [data-theme="dark"] .hero-greeting{color:#fff}
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.prod-card{animation:fadeUp .35s ease both}
+.prod-card:nth-child(2){animation-delay:.07s}
+.prod-card:nth-child(3){animation-delay:.14s}
+.prod-card:nth-child(4){animation-delay:.21s}
+</style>
+</head>
+<body>
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <img src="data:image/png;base64,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" alt="Vincenzo Cuomo" style="height:40px;width:auto;object-fit:contain;filter:brightness(1.05)">
+    <div>
+      <div class="brand-name">Vincenzo Cuomo</div>
+      <div class="brand-sub">Private Banker · FinecoBank</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+      <div style="font-size:9px;color:rgba(255,255,255,0.7);letter-spacing:.05em;text-align:right">Visualizza questa pagina nel colore che vuoi</div>
+      <div style="display:flex;gap:7px">
+        <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" style="background:var(--accent);border-color:var(--accent);color:var(--primary);font-weight:800;box-shadow:0 2px 8px rgba(253,185,19,.5)">☀️ Chiaro</button>
+        <button class="btn btn-accent btn-sm" onclick="showTab('lombard')" style="padding:7px 11px;font-size:11px">💳 Fido</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-greeting">Le Tue Opportunità di Investimento</div>
+  <div class="hero-sub">Soluzioni selezionate per te · <span>Protezione · Rendimento · Fiscalità Efficiente</span></div>
+
+  <div class="capital-widget">
+    <div class="cw-label">💰 Importo che desideri investire</div>
+    <div class="cap-ctrl">
+      <button class="cap-btn" ontouchstart="startAdj(-1)" ontouchend="stopAdj()" onmousedown="startAdj(-1)" onmouseup="stopAdj()" onmouseleave="stopAdj()" aria-label="Riduci">−</button>
+      <div class="cap-display"><span>€</span><span id="capVal">100.000</span></div>
+      <button class="cap-btn" ontouchstart="startAdj(1)" ontouchend="stopAdj()" onmousedown="startAdj(1)" onmouseup="stopAdj()" onmouseleave="stopAdj()" aria-label="Aumenta">+</button>
+    </div>
+    <input type="range" class="cap-slider" id="capSlider" min="1000" max="3000000" step="1000" value="100000"
+           oninput="updateCap(this.value)" ontouchmove="updateCap(this.value)" style="--pct:3.3%">
+    <div class="presets">
+      <button class="preset" onclick="setCap(10000)">€10K</button>
+      <button class="preset" onclick="setCap(50000)">€50K</button>
+      <button class="preset on" onclick="setCap(100000)">€100K</button>
+      <button class="preset" onclick="setCap(250000)">€250K</button>
+      <button class="preset" onclick="setCap(500000)">€500K</button>
+      <button class="preset" onclick="setCap(1000000)">€1M</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NAV TABS ══ -->
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="showTab('soluzioni')">🛡 Soluzioni</div>
+  <div class="nav-tab" onclick="showTab('lombard')">💳 Fido Agevolato</div>
+  <div class="nav-tab" onclick="showTab('portafoglio')">📊 Portafoglio</div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+<!-- ════ TAB SOLUZIONI ════ -->
+<div class="tab-content active" id="tab-soluzioni">
+
+  <div class="sec-title" style="margin-top:2px">⭐ In primo piano — Novità 2026</div>
+  <div class="sec-sub">Sottoscrizione aperta fino al <b>24 Marzo 2026</b> · ISIN IE000TO4KIT3</div>
+
+  <!-- FEATURED 7Y -->
+  <div class="prod-grid">
+  <div class="prod-card featured" style="grid-column:1/-1">
+    <div class="prod-head">
+      <div class="ribbon">NUOVO IN SOTTOSCRIZIONE</div>
+      <div class="prod-icon pi-green" style="margin-top:8px">🛡</div>
+      <div class="prod-badges">
+        <span class="badge b-new">NOVITÀ</span>
+        <span class="badge b-prot">100% Capitale Protetto</span>
+        <span class="badge b-tax">Fiscalità 14,5%</span>
+        <span class="badge b-liq">Liquidabile Sempre</span>
+      </div>
+      <div class="prod-name">Smart Global Defence Callable after 7 years · Fineco AM Fund IV</div>
+      <div class="prod-meta">ISIN IE000TO4KIT3 · Scadenza 26/03/2038 · Rischio 3/7 · UCITS</div>
+    </div>
+    <div class="prod-body">
+      <div class="cpills">
+        <div class="cpill"><div class="pct">5,0%</div><div class="lbl">Cedola<br>Anno 1 → 3</div></div>
+        <div class="cpill"><div class="pct" style="color:var(--accent)">3,0%</div><div class="lbl">Cedola<br>Anno 4 → 7</div></div>
+        <div class="cpill"><div class="pct" style="color:var(--text2)">1,4%</div><div class="lbl">Cedola<br>Anno 8 → 12</div></div>
+        <div class="cpill prot"><div class="pct">100%</div><div class="lbl">Capitale<br>PROTETTO</div></div>
+      </div>
+      <ul class="flist">
+        <li><span class="ic">🛡</span><span><b>Protezione totale del capitale:</b> il tuo investimento iniziale è protetto al 100% sia alla scadenza (2038) sia in caso di rimborso anticipato via call provision a 3° anno e dal 7°anno in poi.</span></li>
+        <li><span class="ic">💰</span><span><b>Fiscalità agevolata al 14,5%:</b> grazie a BTP (75%) e OAT francesi (25%) in portafoglio. Su €100K con cedola 5% risparmi <b>€575 di tasse l'anno</b> rispetto al 26% standard.</span></li>
+        <li><span class="ic">💧</span><span><b>Liquidabile ogni giorno:</b> fondo UCITS — disinvesti quando vuoi al valore di mercato, senza penali né vincoli.</span></li>
+        <li><span class="ic">📞</span><span><b>Call Provision dal 7° anno:</b> la controparte può rimborsare anticipatamente al 100% + cedola annuale. Una garanzia in più.</span></li>
+        <li><span class="ic">🏛</span><span><b>Portafoglio solido:</b> 75% BTP italiani + 25% OAT francesi + 30% CDS su Intesa Sanpaolo, Mediobanca, UniCredit (tramite leva).</span></li>
+      </ul>
+      <div class="hbox gold">
+        <span class="hi">💡</span>
+        <div class="ht">
+          <b>Perché la fiscalità al 14,5% cambia tutto:</b> con cedola 5% su €100K, incassi <strong>€4.275 netti</strong> vs €3.700 con tassazione standard (26%). 
+          <b>+€575 ogni anno</b> solo grazie alla struttura del fondo con titoli di Stato.
+        </div>
+      </div>
+      <div class="mcalc" id="calc7y">
+        <div class="cr"><span class="cl">💰 Il tuo investimento</span><span class="cv a" id="inv7y">€100.000</span></div>
+        <hr class="cdiv">
+        <div class="cr"><span class="cl">📈 Cedola Anno 1-3 (5% lordo)</span><span class="cv g" id="c7y1">€5.000/anno</span></div>
+        <div class="cr"><span class="cl">🏦 Netto fiscalità 14,5%</span><span class="cv g" id="c7y1net">€4.275/anno</span></div>
+        <hr class="cdiv">
+        <div class="cr"><span class="cl">📈 Cedola Anno 4-7 (3% lordo)</span><span class="cv a" id="c7y2">€3.000/anno</span></div>
+        <div class="cr"><span class="cl">🏦 Netto fiscalità 14,5%</span><span class="cv a" id="c7y2net">€2.565/anno</span></div>
+        <hr class="cdiv">
+        <div class="cr"><span class="cl">🔒 Capitale garantito a scadenza</span><span class="cv g" id="cap7y">€100.000</span></div>
+      </div>
+      <div style="margin-top:10px">
+        <div style="font-size:10.5px;font-weight:600;color:var(--text2);margin-bottom:7px;text-transform:uppercase;letter-spacing:.07em">Composizione portafoglio</div>
+        <div class="pbar-wrap"><div class="pbar-lbl"><span class="nm">🇮🇹 BTP Italiani</span><span class="vl">75%</span></div><div class="pbar"><div class="pbf g" style="width:75%"></div></div></div>
+        <div class="pbar-wrap"><div class="pbar-lbl"><span class="nm">🇫🇷 OAT Francesi</span><span class="vl">25%</span></div><div class="pbar"><div class="pbf b" style="width:25%"></div></div></div>
+        <div class="pbar-wrap"><div class="pbar-lbl"><span class="nm">📊 CDS Istituti Finanziari 1% portafoglio (leva)</span><span class="vl">30%</span></div><div class="pbar"><div class="pbf a" style="width:30%"></div></div></div>
+      </div>
+      <div class="risk-row"><span class="risk-lbl">Rischio 3/7</span><div class="risk-blocks"><div class="rb on"></div><div class="rb on"></div><div class="rb on"></div><div class="rb off"></div><div class="rb off"></div><div class="rb off"></div><div class="rb off"></div></div><span class="risk-txt">Medio-Basso</span></div>
+      <div class="disc" style="margin-top:10px">Sottoscrizione: 21/01/2026 – 24/03/2026. Comunicazione marketing. Consultare KID (IE000TO4KIT3) su finecobank.com. Rendimenti al lordo imposte, non garantiti.</div>
+    </div>
+  </div>
+  </div>
+
+  <hr class="sep">
+  <div class="sec-title">📁 Tutte le Soluzioni</div>
+  <div class="sec-sub">Importo di riferimento: <b id="capRef">€100.000</b> — modifica sopra lo slider</div>
+
+  <div class="prod-grid">
+
+  <!-- SD 3Y -->
+  <div class="prod-card">
+    <div class="prod-head">
+      <div class="prod-icon pi-blue">🛡</div>
+      <div class="prod-badges"><span class="badge b-prot">Protezione 100%</span><span class="badge b-tax">Tax 14,5%</span></div>
+      <div class="prod-name">Smart Global Defence · 3 Anni</div>
+      <div class="prod-meta">Fineco AM · Scadenza breve · Rischio basso</div>
+    </div>
+    <div class="prod-body">
+      <div class="cpills">
+        <div class="cpill"><div class="pct">3%</div><div class="lbl">Cedola obiettivo<br>Anni 1-3</div></div>
+        <div class="cpill"><div class="pct" style="color:var(--accent)">1,5%</div><div class="lbl">Se non<br>richiamato</div></div>
+        <div class="cpill prot"><div class="pct">100%</div><div class="lbl">Capitale<br>protetto</div></div>
+      </div>
+      <ul class="flist">
+        <li><span class="ic">🛡</span><span><b>Capitale protetto al 100%</b> dopo 3 anni.</span></li>
+        <li><span class="ic">💰</span><span><b>Fiscalità 14,5%</b> sulla componente BTP/titoli di Stato.</span></li>
+        <li><span class="ic">💧</span><span>UCITS: <b>liquidabile ogni giorno</b> senza penali.</span></li>
+      </ul>
+      <div class="mcalc"><div class="cr"><span class="cl">Investimento</span><span class="cv a" id="inv3y">€100.000</span></div><div class="cr"><span class="cl">Cedola annua (3% lordo)</span><span class="cv g" id="c3y">€3.000</span></div><div class="cr"><span class="cl">Netto 14,5%</span><span class="cv g" id="c3ynet">€2.565</span></div><div class="cr"><span class="cl">Totale 3 anni (netto)</span><span class="cv g" id="c3ytot">€7.695</span></div></div>
+    </div>
+    <button class="exp-btn" onclick="exptoggle('e3y',this)">▼ Dettagli</button>
+    <div class="exp-body" id="e3y"><div class="hbox green"><span class="hi">🏦</span><div class="ht">Con fiscalità 14,5% risparmi <b>€342/anno</b> rispetto alla tassazione standard 26% su €100K e cedola 3%.</div></div></div>
+  </div>
+
+  <!-- SD 6Y -->
+  <div class="prod-card">
+    <div class="prod-head">
+      <div class="prod-icon pi-blue">🛡</div>
+      <div class="prod-badges"><span class="badge b-prot">Protezione 100%</span><span class="badge b-tax">Tax 14,5%</span><span class="badge b-liq">Callable 6Y</span></div>
+      <div class="prod-name">Smart Global Defence · 6 Anni</div>
+      <div class="prod-meta">Fineco AM · ISIN IE0009P4R7N3 · Callable dal 6° anno · max 10 anni</div>
+    </div>
+    <div class="prod-body">
+      <div class="cpills">
+        <div class="cpill"><div class="pct">4%</div><div class="lbl">Anni 1-3</div></div>
+        <div class="cpill"><div class="pct" style="color:var(--accent)">3%</div><div class="lbl">Anni 4-6</div></div>
+        <div class="cpill"><div class="pct" style="color:var(--text2)">1,5%</div><div class="lbl">Anni 7-10</div></div>
+        <div class="cpill prot"><div class="pct">100%</div><div class="lbl">Capitale</div></div>
+      </div>
+      <ul class="flist">
+        <li><span class="ic">🛡</span><span><b>Capitale 100% protetto</b> anche in caso di call anticipata.</span></li>
+        <li><span class="ic">🔔</span><span><b>Call dal 3° anno:</b> rimborso anticipato al 100% + cedola.</span></li>
+        <li><span class="ic">💰</span><span><b>Tax 14,5%</b> per massimizzare rendimento netto.</span></li>
+      </ul>
+      <div class="mcalc"><div class="cr"><span class="cl">Investimento</span><span class="cv a" id="inv6y">€100.000</span></div><div class="cr"><span class="cl">Cedola anni 1-3 (4% lordo / netto)</span><span class="cv g" id="c6y1">€3.420</span></div><div class="cr"><span class="cl">Cedola anni 4-6 (3% lordo / netto)</span><span class="cv a" id="c6y2">€2.565</span></div><div class="cr"><span class="cl">Cedola anni 7-10 (1,5% lordo / netto)</span><span class="cv" style="color:var(--text2)" id="c6y3">€1.283</span></div></div>
+    </div>
+  </div>
+
+  <!-- SD Multi -->
+  <div class="prod-card">
+    <div class="prod-head">
+      <div class="prod-icon pi-gold">⚡</div>
+      <div class="prod-badges"><span class="badge b-prot">Protezione 100%</span><span class="badge" style="background:var(--primary-soft);color:var(--cyan)">Multi-Asset</span><span class="badge b-tax">Tax 14,5%</span></div>
+      <div class="prod-name">Smart Global Defence · Multi-Strategy</div>
+      <div class="prod-meta">Fineco AM · Cedola variabile · Flessibile</div>
+    </div>
+    <div class="prod-body">
+      <ul class="flist">
+        <li><span class="ic">🛡</span><span><b>100% capitale protetto</b> a scadenza.</span></li>
+        <li><span class="ic">⚡</span><span><b>Multi-asset ottimizzato:</b> esposizione diversificata obbligazionaria.</span></li>
+        <li><span class="ic">💰</span><span><b>Tax 14,5%</b> sulla componente titoli di Stato.</span></li>
+        <li><span class="ic">💧</span><span>Sempre liquidabile, <b>nessun vincolo</b>.</span></li>
+      </ul>
+      <div class="mcalc"><div class="cr"><span class="cl">Investimento</span><span class="cv a" id="invms">€100.000</span></div><div class="cr"><span class="cl">Cedola stimata</span><span class="cv g">4,2% – 5,5%</span></div></div>
+    </div>
+  </div>
+
+  <!-- SD Zero Coupon -->
+  <div class="prod-card">
+    <div class="prod-head">
+      <div class="prod-icon pi-blue">0️⃣</div>
+      <div class="prod-badges"><span class="badge b-prot">Protezione 100%+</span><span class="badge b-tax">Tax 14,5%</span></div>
+      <div class="prod-name">Smart Global Defence · Zero Coupon</div>
+      <div class="prod-meta">Fineco AM · Crescita a scadenza · No cedole intermedie</div>
+    </div>
+    <div class="prod-body">
+      <ul class="flist">
+        <li><span class="ic">📈</span><span><b>Rendimento a scadenza:</b> tutto il guadagno capitalizzato, protezione 100%.</span></li>
+        <li><span class="ic">🎯</span><span>Ideale senza necessità di <b>flusso cedolare</b>, crescita certa.</span></li>
+        <li><span class="ic">💰</span><span><b>Tax 14,5%</b>: risparmio fiscale concreto.</span></li>
+        <li><span class="ic">💧</span><span>UCITS: <b>vendibile ogni giorno</b>.</span></li>
+      </ul>
+      <div class="mcalc"><div class="cr"><span class="cl">Investimento</span><span class="cv a" id="invzc">€100.000</span></div><div class="cr"><span class="cl">Valore stimato a scadenza (+20%)</span><span class="cv g" id="vzc">€120.000</span></div></div>
+    </div>
+  </div>
+
+  <!-- Certificati -->
+  <div class="prod-card">
+    <div class="prod-head">
+      <div class="prod-icon pi-cyan">📜</div>
+      <div class="prod-badges"><span class="badge" style="background:var(--primary-soft);color:var(--cyan)">Barriera 60-70%</span><span class="badge b-liq">Quotato EMS</span></div>
+      <div class="prod-name">Certificati FinecoBank</div>
+      <div class="prod-meta">Cedole mensili/trimestrali · Compensa minusvalenze</div>
+    </div>
+    <div class="prod-body">
+      <ul class="flist">
+        <li><span class="ic">📈</span><span><b>Cedole elevate</b> fino al 6-8% annuo, pagate mensile o trimestrale.</span></li>
+        <li><span class="ic">🛡</span><span><b>Barriera 60-70%:</b> capitale al sicuro finché il sottostante non crolla oltre la barriera.</span></li>
+        <li><span class="ic">🏦</span><span>Quotati in borsa: <b>liquidabili in tempo reale</b>.</span></li>
+        <li><span class="ic">💸</span><span><b>Compensano minusvalenze:</b> recuperi le perdite pregresse nel tuo zainetto fiscale.</span></li>
+      </ul>
+      <div class="mcalc"><div class="cr"><span class="cl">Investimento</span><span class="cv a" id="invcert">€100.000</span></div><div class="cr"><span class="cl">Cedola annua (6,5% lordo)</span><span class="cv g" id="ccert">€6.500</span></div><div class="cr"><span class="cl">Cedola mensile stimata</span><span class="cv g" id="ccertm">€542</span></div></div>
+      <div class="hbox gold" style="margin-top:8px"><span class="hi">🏆</span><div class="ht">I certificati sono l'<b>unico strumento che recupera le minusvalenze</b>: ogni €1 di cedola vale di più se hai minus pregresse.</div></div>
+    </div>
+  </div>
+
+  <!-- Active ETF -->
+  <div class="prod-card">
+    <div class="prod-head">
+      <div class="prod-icon pi-cyan">📊</div>
+      <div class="prod-badges"><span class="badge" style="background:var(--primary-soft);color:var(--cyan)">Gestione Attiva</span><span class="badge b-liq">ETF Quotato</span></div>
+      <div class="prod-name">Active Portfolios ETF</div>
+      <div class="prod-meta">3 profili: Prudente · Bilanciato · Dinamico</div>
+    </div>
+    <div class="prod-body">
+      <ul class="flist">
+        <li><span class="ic">🎯</span><span><b>Scegli il profilo</b>: da Prudente a Dinamico.</span></li>
+        <li><span class="ic">🤖</span><span><b>Gestione attiva algoritmica</b>, si adatta al mercato.</span></li>
+        <li><span class="ic">💧</span><span>ETF in borsa: <b>compri/vendi in tempo reale</b>.</span></li>
+      </ul>
+      <div class="chart-wrap"><canvas id="chartETF"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Longevity -->
+  <div class="prod-card">
+    <div class="prod-head">
+      <div class="prod-icon pi-purple">🌱</div>
+      <div class="prod-badges"><span class="badge" style="background:rgba(155,107,255,.2);color:var(--purple)">PAC Pensione</span><span class="badge b-liq">Lungo Termine</span></div>
+      <div class="prod-name">Longevity Series 2040 · 2050 · 2060</div>
+      <div class="prod-meta">Fineco AM · Target Date Fund · Piano Accumulo</div>
+    </div>
+    <div class="prod-body">
+      <ul class="flist">
+        <li><span class="ic">🌱</span><span><b>Cresce con te:</b> il fondo riduce automaticamente il rischio avvicinandosi alla data obiettivo.</span></li>
+        <li><span class="ic">💧</span><span>Liquidabile sempre, ideale come <b>PAC mensile</b>.</span></li>
+        <li><span class="ic">🌍</span><span>Diversificazione su <b>azioni, obbligazioni, real asset</b> globali.</span></li>
+      </ul>
+      <div class="mcalc"><div class="cr"><span class="cl">Investimento iniziale</span><span class="cv a" id="invlong">€100.000</span></div><div class="cr"><span class="cl">Stima 2050 (+6%/anno)</span><span class="cv g" id="vlong">€320.714</span></div></div>
+      <!-- PAC Simulator -->
+      <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px">
+        <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">🗓️ Simulatore PAC Mensile</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+          <div>
+            <label style="font-size:10px;font-weight:600;color:var(--text2);display:block;margin-bottom:4px">Rata mensile (€)</label>
+            <input type="number" id="pacMensile" value="500" min="50" max="10000" step="50"
+              oninput="calcPAC()"
+              style="width:100%;padding:7px 9px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg3);color:var(--text);font-size:13px;font-weight:600">
+          </div>
+          <div>
+            <label style="font-size:10px;font-weight:600;color:var(--text2);display:block;margin-bottom:4px">Durata (anni)</label>
+            <input type="number" id="pacAnni" value="20" min="5" max="40" step="1"
+              oninput="calcPAC()"
+              style="width:100%;padding:7px 9px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg3);color:var(--text);font-size:13px;font-weight:600">
+          </div>
+        </div>
+        <div class="mcalc" id="pacResult">
+          <div class="cr"><span class="cl">Totale versato</span><span class="cv a" id="pacVersato">€120.000</span></div>
+          <div class="cr"><span class="cl">Capitale stimato</span><span class="cv g" id="pacCapitale">€383.765</span></div>
+          <div class="cr"><span class="cl">Guadagno netto</span><span class="cv g" id="pacGuadagno">+€263.765</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIVATE EQUITY — SPECIAL ENHANCED CARD -->
+  <div class="prod-card pe-card" style="grid-column:1/-1">
+    <div class="prod-head">
+      <div class="ribbon pe-ribbon">🔥 OPPORTUNITÀ ECCEZIONALE</div>
+      <div class="prod-icon pi-orange" style="margin-top:8px">🏭</div>
+      <div class="prod-badges">
+        <span class="badge b-hot">Private Equity</span>
+        <span class="badge" style="background:rgba(155,107,255,.2);color:var(--purple)">ELTIF 2.0</span>
+        <span class="badge" style="background:rgba(0,212,255,.15);color:var(--cyan)">IPO Pipeline</span>
+      </div>
+      <div class="prod-name">ELTIF – Private Equity · Fondo IPO Tech & Innovation</div>
+      <div class="prod-meta">Accesso al mercato privato · Min €10.000 · ELTIF 2.0 · Orizzonte 7 anni</div>
+    </div>
+    <div class="prod-body">
+
+      <!-- Why exceptional -->
+      <div class="pe-hero">
+        <div class="pe-hero-title">🚀 Perché questa è un'opportunità irripetibile</div>
+        <div class="pe-hero-sub">
+          Il fondo detiene già in portafoglio <b>partecipazioni in aziende tech di rilievo mondiale</b> che si avviano verso IPO nei prossimi 2-4 anni. 
+          Queste posizioni sono già <b>contabilizzate al costo di carico</b>: il potenziale upside verso la quotazione in borsa è ancora interamente da realizzare.
+        </div>
+
+        <!-- IPO Grid -->
+        <div class="ipo-grid">
+          <div class="ipo-card">
+            <div class="ic-name">🤖 Anthropic</div>
+            <div class="ic-sub">AI leader. Valutazione ~$61B. IPO atteso 2025-2026</div>
+            <div class="ic-val">AI #1</div>
+            <div class="ic-status status-hot">🔥 IPO in vista</div>
+          </div>
+          <div class="ipo-card">
+            <div class="ic-name">📱 Bending Spoons</div>
+            <div class="ic-sub">Unicorno italiano. App: Evernote, Splice, WeTransfer</div>
+            <div class="ic-val">~€3B val.</div>
+            <div class="ic-status status-hot">🇮🇹 Eccellenza IT</div>
+          </div>
+          <div class="ipo-card">
+            <div class="ic-name">🔐 Databricks</div>
+            <div class="ic-sub">Data AI Cloud. Val. $62B. Candidato IPO top</div>
+            <div class="ic-val">Data AI</div>
+            <div class="ic-status status-in">✓ In portafoglio</div>
+          </div>
+          <div class="ipo-card">
+            <div class="ic-name">⚡ SpaceX / xAI</div>
+            <div class="ic-sub">Innovazione spaziale e AI di Musk</div>
+            <div class="ic-val">Space</div>
+            <div class="ic-status status-hot">🚀 Pre-IPO</div>
+          </div>
+          <div class="ipo-card">
+            <div class="ic-name">🏗 Klarna</div>
+            <div class="ic-sub">Buy-now-pay-later. Val. $46B. IPO NYSE 2025</div>
+            <div class="ic-val">Fintech</div>
+            <div class="ic-status status-in">✓ In portafoglio</div>
+          </div>
+          <div class="ipo-card">
+            <div class="ic-name">🌐 + Altri</div>
+            <div class="ic-sub">Portfolio diversificato su 15+ società tech pre-IPO</div>
+            <div class="ic-val">15+</div>
+            <div class="ic-status status-in">✓ Diversificato</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Return visualization -->
+      <div class="return-viz">
+        <div class="rv-title">Simulazione rendimento su 7 anni · Stima 2.5x (250%)</div>
+        <div class="rv-bar">
+          <div class="rv-fill" id="peBarFill" style="width:100%">
+            <span id="peBarText">€250.000 → €625.000</span>
+          </div>
+        </div>
+        <div class="rv-markers">
+          <span>Anno 0 (capitale)</span>
+          <span>Anno 3-4 (exit parziali)</span>
+          <span>Anno 7 (target 2.5x)</span>
+        </div>
+        <div class="rv-big">
+          <div class="mul">2.5×</div>
+          <div class="sub" id="peReturnSub">Stima: €100.000 → €250.000 in 7 anni · CAGR ~14%</div>
+        </div>
+      </div>
+
+      <ul class="flist">
+        <li><span class="ic">🏭</span><span><b>Accesso al Private Equity</b> con soglia ridotta (€10K): investi come i grandi istituzionali in aziende non quotate ad alto potenziale.</span></li>
+        <li><span class="ic">📈</span><span><b>Target 2.5x in 7 anni</b> grazie alle IPO in pipeline (Anthropic, Bending Spoons, Databricks e altri già in portafoglio al costo storico). CAGR stimato ~14%.</span></li>
+        <li><span class="ic">🏛</span><span><b>Posizioni contabilizzate al costo:</b> il valore reale delle partecipazioni è già superiore al prezzo di carico — l'upside verso l'IPO non è ancora riconosciuto nel NAV.</span></li>
+        <li><span class="ic">🔒</span><span>Orizzonte 7 anni. <b>ELTIF 2.0</b> prevede finestre di liquidità parziale. Correlazione bassa ai mercati quotati.</span></li>
+        <li><span class="ic">🌍</span><span>Diversificazione reale del portafoglio: <b>asset class non correlata</b> che riduce il rischio complessivo.</span></li>
+      </ul>
+
+      <div class="mcalc" id="calcPE">
+        <div class="cr"><span class="cl">💰 Il tuo investimento</span><span class="cv a" id="invpe">€100.000</span></div>
+        <hr class="cdiv">
+        <div class="cr"><span class="cl">🎯 Target valore a 7 anni (2.5x)</span><span class="cv g" id="vpe25">€250.000</span></div>
+        <div class="cr"><span class="cl">📈 Guadagno netto stimato</span><span class="cv g" id="gpe">€150.000</span></div>
+        <div class="cr"><span class="cl">📊 CAGR equivalente</span><span class="cv o">~14% annuo</span></div>
+        <hr class="cdiv">
+        <div class="cr"><span class="cl">🔖 Investimento minimo</span><span class="cv a">€10.000</span></div>
+        <div class="cr"><span class="cl">⏱ Orizzonte temporale</span><span class="cv o">7 anni</span></div>
+      </div>
+
+      <div class="hbox orange" style="margin-top:10px">
+        <span class="hi">⚠️</span>
+        <div class="ht">
+          <b>Rischio elevato:</b> il Private Equity non garantisce rendimenti. Quello indicato è un target stimato, non garantito. 
+          Le IPO potrebbero essere ritardate o non avvenire. Strumento illiquido per 7 anni salvo finestre ELTIF 2.0. 
+          Adatto a investitori con elevata propensione al rischio e orizzonte lungo.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  </div><!-- end prod-grid -->
+</div><!-- end tab-soluzioni -->
+
+<!-- ════ TAB LOMBARD ════ -->
+<div class="tab-content" id="tab-lombard">
+  <div class="lombard-section">
+    <div class="lb-header">
+      <div class="lb-title">💳 Fido Agevolato FinecoBank</div>
+      <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:4px;letter-spacing:.04em">💡 Liquidità extra dai tuoi risparmi</div>
+      <div class="lb-sub">
+        Ottieni liquidità <b>senza vendere i tuoi investimenti</b>. Il fido è garantito dai titoli in portafoglio. 
+        Utilizzi solo quando serve, paghi solo sugli importi usati. <b>Tasso = Euribor 3M (1,86%) + 0,10% = 1,96% attuale</b>. Zero costi fissi.
+      </div>
+      <div class="lb-benefits">
+        <div class="lbb"><div class="v">0,1%</div><div class="l">Spread Euribor<br>Nessun altro costo</div></div>
+        <div class="lbb"><div class="v">€0</div><div class="l">Costi fissi<br>Paghi solo interessi</div></div>
+        <div class="lbb"><div class="v">Sempre</div><div class="l">Disponibile<br>quando vuoi</div></div>
+        <div class="lbb"><div class="v">No sell</div><div class="l">Titoli restano<br>investiti</div></div>
+      </div>
+      <div class="hbox gold">
+        <span class="hi">⚡</span>
+        <div class="ht">
+          <b>Come funziona:</b> hai €100K in Smart Defence. La banca ti concede fino a €80K (80% LTV). 
+          Usi €50K → paghi interessi solo su €50K. I tuoi €100K continuano a maturare cedole. 
+          Restituisci quando vuoi, senza penali.
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:14px">🔢 Simulatore</div>
+    <div class="lc-grid">
+      <div class="lc-field">
+        <label>💰 Valore portafoglio</label>
+        <input type="number" class="lc-input" id="lcP" value="100000" min="1000" max="5000000" oninput="syncLcP(this.value)">
+        <input type="range" class="lc-slider" id="lcPS" min="1000" max="3000000" step="1000" value="100000" oninput="syncLcPS(this.value)">
+        <div class="lc-hint">Titoli in garanzia (Smart Defence, ETF, etc.)</div>
+      </div>
+      <div class="lc-field">
+        <label>📊 Euribor 3M (%)</label>
+        <input type="number" class="lc-input" id="lcE" value="1.86" min="0" max="10" step="0.05" oninput="calcLombard()">
+        <input type="range" class="lc-slider" style="accent-color:var(--accent)" id="lcES" min="0" max="8" step="0.05" value="1.86" oninput="document.getElementById('lcE').value=parseFloat(this.value).toFixed(2);calcLombard()">
+        <div class="lc-hint" style="color:var(--green);font-weight:600">✅ Valore corrente: 1,86% (marzo 2026)</div>
+      </div>
+      <div class="lc-field">
+        <label>💳 Importo da utilizzare</label>
+        <input type="number" class="lc-input" id="lcU" value="50000" min="0" max="5000000" oninput="syncLcU(this.value)">
+        <input type="range" class="lc-slider" style="accent-color:var(--green)" id="lcUS" min="0" max="2400000" step="1000" value="50000" oninput="syncLcUS(this.value)">
+        <div class="lc-hint">Paghi interessi solo su questo importo</div>
+      </div>
+      <div class="lc-field">
+        <label>📅 Durata utilizzo (mesi)</label>
+        <input type="number" class="lc-input" id="lcM" value="12" min="1" max="120" oninput="calcLombard()">
+        <input type="range" class="lc-slider" style="accent-color:var(--purple)" id="lcMS" min="1" max="60" step="1" value="12" oninput="document.getElementById('lcM').value=this.value;calcLombard()">
+        <div class="lc-hint">Mesi di utilizzo stimati</div>
+      </div>
+    </div>
+
+    <div class="lb-results">
+      <div class="lbr"><div class="ll">🏦 Fido massimo</div><div class="lv g" id="lrF">€80.000</div><div class="ls">80% portafoglio</div></div>
+      <div class="lbr"><div class="ll">📊 Tasso totale</div><div class="lv" id="lrT">1,96%</div><div class="ls">Euribor + 0,10%</div></div>
+      <div class="lbr"><div class="ll">📅 Interessi/mese</div><div class="lv o" id="lrIM">€82</div><div class="ls">Su importo usato</div></div>
+      <div class="lbr"><div class="ll">📆 Interessi totali</div><div class="lv o" id="lrIT">€980</div><div class="ls" id="lrISub">12 mesi</div></div>
+      <div class="lbr"><div class="ll">💰 Cedole portafoglio</div><div class="lv g" id="lrC">€5.000</div><div class="ls">Smart Defence 5%/anno</div></div>
+      <div class="lbr" style="border-color:rgba(0,200,120,.4)"><div class="ll">✅ Bilancio netto/anno</div><div class="lv g" id="lrB">+€4.020</div><div class="ls">Cedole - interessi</div></div>
+    </div>
+
+    <div class="lb-strategy">
+      <div class="ls-title">🚀 Strategia: Lombard → Smart Defence 7Y</div>
+      <div class="ls-sub" id="lsDesc">Se il tasso Lombard è inferiore alla cedola Smart Defence, usi il fido per investire di più — guadagnando la differenza senza toccare i risparmi.</div>
+      <div class="ls-nums">
+        <div class="lsn"><div class="nv" id="lsU">€50.000</div><div class="nl">Lombard investito in SD 7Y</div></div>
+        <div class="lsn"><div class="nv" id="lsC">€2.500</div><div class="nl">Cedola aggiuntiva (5%)</div></div>
+        <div class="lsn"><div class="nv" id="lsCo">€1.375</div><div class="nl">Costo interessi/anno</div></div>
+      </div>
+      <div class="ls-verdict" id="lsV">
+        <span class="vi">✅</span>
+        <div class="vt" id="lsVT"><b>Strategia Positiva!</b> Cedola SD 5% &gt; Tasso Lombard 1,96%. Guadagno netto: <strong>+€1.520/anno</strong> senza nuovo capitale.</div>
+      </div>
+    </div>
+
+    <div class="disc"><b>⚠️ Avvertenze:</b> Il Fido Agevolato è un affidamento a revoca. Il tasso varia con l'Euribor 3M. In caso di calo del portafoglio la banca può richiedere integrazione garanzia (margin call). Il Fido amplifica guadagni e perdite. Non costituisce consulenza finanziaria.</div>
+  </div>
+</div><!-- end tab-lombard -->
+
+<!-- ════ TAB PORTAFOGLIO ════ -->
+<div class="tab-content" id="tab-portafoglio">
+  <div class="port-box">
+    <div class="pb-label">Portafoglio simulato su</div>
+    <div style="font-size:10px;color:var(--text3);font-style:italic;margin-bottom:4px;text-align:center">(Ipotesi di portafoglio, contatta il private banker per personalizzarlo)</div>
+    <div class="pb-total" id="pbTot">€100.000</div>
+    <div class="alloc-wrap">
+      <div class="alloc-chart"><canvas id="chartAlloc"></canvas></div>
+      <div class="alloc-leg">
+        <div class="al-item"><div class="al-dot" style="background:#00C878"></div><span class="al-nm">Smart Defence 7Y</span><span class="al-pc">35%</span></div>
+        <div class="al-item"><div class="al-dot" style="background:#0055CC"></div><span class="al-nm">Smart Defence 3Y</span><span class="al-pc">20%</span></div>
+        <div class="al-item"><div class="al-dot" style="background:#FDB913"></div><span class="al-nm">Certificati</span><span class="al-pc">15%</span></div>
+        <div class="al-item"><div class="al-dot" style="background:#00D4FF"></div><span class="al-nm">Active ETF</span><span class="al-pc">15%</span></div>
+        <div class="al-item"><div class="al-dot" style="background:#9B6BFF"></div><span class="al-nm">Longevity</span><span class="al-pc">10%</span></div>
+        <div class="al-item"><div class="al-dot" style="background:#FF8C42"></div><span class="al-nm">ELTIF PE</span><span class="al-pc">5%</span></div>
+      </div>
+    </div>
+    <div class="pb-items">
+      <div class="pbi"><div class="pn">🛡 Smart Defence 7Y</div><div class="pv" id="pb7y">€35.000</div><div class="pm">Cedola 5% → €1.750/anno</div></div>
+      <div class="pbi"><div class="pn">🛡 Smart Defence 3Y</div><div class="pv" id="pb3y">€20.000</div><div class="pm">Cedola 5,3% → €1.060/anno</div></div>
+      <div class="pbi"><div class="pn">📜 Certificati</div><div class="pv" id="pbce">€15.000</div><div class="pm">Cedola 6,5% → €975/anno</div></div>
+      <div class="pbi"><div class="pn">📊 Active ETF</div><div class="pv" id="pbetf">€15.000</div><div class="pm">Crescita attesa 4-6%</div></div>
+      <div class="pbi"><div class="pn">🌱 Longevity</div><div class="pv" id="pblo">€10.000</div><div class="pm">Lungo termine +6%/anno</div></div>
+      <div class="pbi"><div class="pn">🏭 ELTIF PE</div><div class="pv" id="pbpe">€5.000</div><div class="pm">Target 2.5x in 7 anni</div></div>
+    </div>
+    <div class="mcalc" style="margin-top:12px">
+      <div class="cr"><span class="cl">Cedole annue cumulate (stima)</span><span class="cv g" id="pbCed">€3.785</span></div>
+      <div class="cr"><span class="cl">Rendimento medio ponderato</span><span class="cv g" id="pbRend">3,79%</span></div>
+      <div class="cr"><span class="cl">Capitale protetto (70% portafoglio)</span><span class="cv a" id="pbProt">€70.000</span></div>
+    </div>
+  </div>
+  <!-- PASSA PAROLA -->
+  <div class="passa-parola">
+    <div class="pp-title">🎁 Conosci qualcuno che potrebbe beneficiarne?</div>
+    <div class="pp-sub">Questa simulazione è <b>gratuita e senza impegno</b>.<br>Condividila con amici o familiari interessati a proteggere e far crescere i propri risparmi.</div>
+    <div class="pp-btns">
+      <button class="pp-btn pp-wa" onclick="shareWA()">💬 Invia su WhatsApp</button>
+      <button class="pp-btn pp-email" onclick="shareEmail()">✉️ Invia per email</button>
+      <button class="pp-btn pp-copy" onclick="copyLink()">🔗 Copia link</button>
+    </div>
+  </div>
+
+  <div class="disc">Portafoglio simulato a scopo illustrativo. Non costituisce proposta d'investimento. Rendimenti al lordo imposte, non garantiti. Vincenzo Cuomo · Private Banker FinecoBank.</div>
+</div><!-- end tab-portafoglio -->
+
+</div><!-- end main -->
+
+<!-- ══ FLOATING CONTACT BAR ══ -->
+<div class="float-bar" style="gap:6px">
+  <a class="float-btn fb-call" href="tel:+393356032819" onclick="return confirm('Chiamare Vincenzo Cuomo?')" style="flex:1.2">
+    📞 Chiama
+  </a>
+  <a class="float-btn fb-wa" href="https://wa.me/393356032819?text=Ciao%20Vincenzo%2C%20vorrei%20maggiori%20informazioni%20sulle%20opportunit%C3%A0%20di%20investimento" target="_blank" rel="noopener" style="flex:1.2">
+    💬 Chat
+  </a>
+  <button class="float-btn fb-share" onclick="shareApp()" style="flex:1">
+    📤 Invia
+  </button>
+</div>
+<!-- Toast feedback -->
+<div class="share-toast" id="shareToast">✅ Copiato negli appunti!</div>
+<script>
+
+// ════════════════════════════════════════════
+//  SHARE / PASSA PAROLA
+// ════════════════════════════════════════════
+const SHARE_MSG = `🛡 Ciao! Ho trovato questa simulazione di investimento con Vincenzo Cuomo, Private Banker FinecoBank.
+
+Puoi inserire il tuo capitale e vedere subito i rendimenti di ogni prodotto, il Fido Agevolato (liquidità extra senza vendere nulla) e il portafoglio consigliato.
+
+📊 Simula gratuitamente: ${window.location.href}
+
+📞 Per info: +39 335 6032819`;
+
+function shareApp(){
+  if(navigator.share){
+    navigator.share({
+      title:'Le Tue Opportunità · FinecoBank Private Banking',
+      text:'Simula i tuoi investimenti con Vincenzo Cuomo, Private Banker FinecoBank. Protezione capitale, cedole agevolate e molto altro.',
+      url: window.location.href
+    }).catch(()=>{});
+  } else {
+    shareWA();
+  }
+}
+
+function shareWA(){
+  const url = 'https://wa.me/?text='+encodeURIComponent(SHARE_MSG);
+  window.open(url,'_blank','noopener');
+}
+
+function shareEmail(){
+  const sub = encodeURIComponent('💰 Simulatore Investimenti FinecoBank - ti può interessare');
+  const body = encodeURIComponent(SHARE_MSG);
+  window.open(`mailto:?subject=${sub}&body=${body}`);
+}
+
+function copyLink(){
+  const text = SHARE_MSG;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(()=>showToast('✅ Messaggio copiato!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('✅ Messaggio copiato!');
+  }
+}
+
+function showToast(msg){
+  const t = document.getElementById('shareToast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+// ════════════════════════════════════════════
+//  THEME
+// ════════════════════════════════════════════
+function toggleTheme(){
+  const h = document.documentElement;
+  const isDark = h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme', isDark?'light':'dark');
+  const btn = document.getElementById('themeBtn');
+  btn.textContent = isDark ? '🌙 Scuro' : '☀️ Chiaro';
+  btn.style.background = isDark ? '' : 'var(--accent)';
+  btn.style.color = isDark ? '' : 'var(--primary)';
+  if(allocChart){ allocChart.destroy(); allocChart=null; }
+  if(document.getElementById('tab-portafoglio').classList.contains('active')) initAllocChart();
+}
+
+// ════════════════════════════════════════════
+//  CAPITAL CONTROLS
+// ════════════════════════════════════════════
+let globalCap = 100000;
+let adjTimer = null;
+let adjDir = 0;
+
+function getStep(v){
+  if(v < 10000) return 500;
+  if(v < 50000) return 1000;
+  if(v < 200000) return 5000;
+  if(v < 1000000) return 10000;
+  return 50000;
+}
+
+function startAdj(dir){
+  adjDir = dir;
+  doAdj();
+  adjTimer = setInterval(()=>{ doAdj(); }, 180);
+}
+function stopAdj(){
+  clearInterval(adjTimer);
+  adjTimer = null;
+}
+function doAdj(){
+  const step = getStep(globalCap);
+  let v = globalCap + adjDir * step;
+  v = Math.max(1000, Math.min(3000000, Math.round(v/step)*step));
+  setCap(v);
+}
+
+function updateCap(v){
+  v = parseFloat(v);
+  if(isNaN(v)||v<1000) v=1000;
+  if(v>3000000) v=3000000;
+  globalCap = v;
+  document.getElementById('capVal').textContent = Math.round(v).toLocaleString('it-IT');
+  const pct = ((v-1000)/(3000000-1000))*100;
+  document.getElementById('capSlider').style.setProperty('--pct', pct+'%');
+  document.querySelectorAll('.preset').forEach(b=>b.classList.remove('on'));
+  updateAllCalcs();
+}
+
+function setCap(v){
+  globalCap = v;
+  document.getElementById('capSlider').value = v;
+  document.getElementById('capVal').textContent = Math.round(v).toLocaleString('it-IT');
+  const pct = ((v-1000)/(3000000-1000))*100;
+  document.getElementById('capSlider').style.setProperty('--pct', pct+'%');
+  document.querySelectorAll('.preset').forEach(b=>{
+    const bv = parseFloat(b.onclick.toString().match(/\d+/)?.[0]||0);
+    b.classList.toggle('on', bv===v);
+  });
+  updateAllCalcs();
+}
+
+function fmt(n){
+  if(n===0) return '€0';
+  if(n>=1000000) return '€'+(n/1000000).toFixed(2).replace('.',',')+'M';
+  return '€'+Math.round(n).toLocaleString('it-IT');
+}
+function fmtPct(n){return n.toFixed(2).replace('.',',')+'%'}
+
+function updateAllCalcs(){
+  const c = globalCap;
+  // 7Y
+  set('inv7y',fmt(c)); set('c7y1',fmt(c*.05)+'/anno'); set('c7y1net',fmt(c*.05*.855)+'/anno');
+  set('c7y2',fmt(c*.03)+'/anno'); set('c7y2net',fmt(c*.03*.855)+'/anno'); set('cap7y',fmt(c));
+  // 3Y
+  set('inv3y',fmt(c)); set('c3y',fmt(c*.03)); set('c3ynet',fmt(c*.03*.855));
+  set('c3ytot',fmt(c*.03*.855*3));
+  // 6Y
+  set('inv6y',fmt(c)); set('c6y1',fmt(c*.04*.855)); set('c6y2',fmt(c*.03*.855)); set('c6y3',fmt(c*.015*.855));
+  // MS/ZC
+  set('invms',fmt(c)); set('invzc',fmt(c)); set('vzc',fmt(c*1.20));
+  // Cert
+  set('invcert',fmt(c)); set('ccert',fmt(c*.065)); set('ccertm',fmt(c*.065/12));
+  // Longevity
+  set('invlong',fmt(c)); set('vlong',fmt(c*Math.pow(1.06,24)));
+  calcPAC();
+  // PE 2.5x
+  set('invpe',fmt(c));
+  set('vpe25',fmt(c*2.5)); set('gpe',fmt(c*1.5));
+  // PE bar text
+  const barEl = document.getElementById('peBarText');
+  if(barEl) barEl.textContent = fmt(c)+' → '+fmt(c*2.5);
+  const subEl = document.getElementById('peReturnSub');
+  if(subEl) subEl.textContent = 'Stima: '+fmt(c)+' → '+fmt(c*2.5)+' in 7 anni · CAGR ~14%';
+  // Ref
+  set('capRef', fmt(c));
+  // Portfolio
+  updatePortfolio(c);
+  // Lombard sync
+  const lp = document.getElementById('lcP');
+  if(lp){ lp.value = Math.round(c); document.getElementById('lcPS').value=c; }
+  calcLombard();
+}
+
+function set(id,v){const el=document.getElementById(id);if(el)el.textContent=v}
+
+function updatePortfolio(c){
+  set('pbTot',fmt(c));
+  set('pb7y',fmt(c*.35)); set('pb3y',fmt(c*.20)); set('pbce',fmt(c*.15));
+  set('pbetf',fmt(c*.15)); set('pblo',fmt(c*.10)); set('pbpe',fmt(c*.05));
+  const ced = c*.35*.05 + c*.20*.053 + c*.15*.065;
+  set('pbCed',fmt(ced));
+  set('pbRend',fmtPct(ced/c*100));
+  set('pbProt',fmt(c*.70));
+}
+
+// ════════════════════════════════════════════
+//  TABS
+// ════════════════════════════════════════════
+function showTab(name){
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  const tabs=['soluzioni','lombard','portafoglio'];
+  document.querySelectorAll('.nav-tab')[tabs.indexOf(name)]?.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(name==='portafoglio') setTimeout(initAllocChart,100);
+}
+
+// ════════════════════════════════════════════
+//  EXPAND
+// ════════════════════════════════════════════
+function exptoggle(id,btn){
+  const el=document.getElementById(id);
+  el.classList.toggle('open');
+  btn.textContent=el.classList.contains('open')?'▲ Chiudi':'▼ Dettagli';
+}
+
+// ════════════════════════════════════════════
+//  PAC SIMULATOR (8.3% net annual — engine only)
+// ════════════════════════════════════════════
+function calcPAC(){
+  const pm = parseFloat(document.getElementById('pacMensile')?.value)||500;
+  const ay = parseFloat(document.getElementById('pacAnni')?.value)||20;
+  const r = 0.083/12; // net annual rate / 12
+  const n = ay * 12;
+  const fv = pm * (Math.pow(1+r, n) - 1) / r;
+  const versato = pm * n;
+  const guadagno = fv - versato;
+  const s = (id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
+  s('pacVersato', fmt(versato));
+  s('pacCapitale', fmt(fv));
+  s('pacGuadagno', '+'+fmt(guadagno));
+}
+
+// ════════════════════════════════════════════
+//  LOMBARD CALC
+// ════════════════════════════════════════════
+function syncLcP(v){ document.getElementById('lcPS').value=Math.min(v,3000000); calcLombard(); }
+function syncLcPS(v){ document.getElementById('lcP').value=Math.round(v); calcLombard(); }
+function syncLcU(v){ document.getElementById('lcUS').value=Math.min(v,2400000); calcLombard(); }
+function syncLcUS(v){ document.getElementById('lcU').value=Math.round(v); calcLombard(); }
+
+function calcLombard(){
+  const P = parseFloat(document.getElementById('lcP')?.value)||100000;
+  const E = parseFloat(document.getElementById('lcE')?.value)||1.86;
+  const U = parseFloat(document.getElementById('lcU')?.value)||50000;
+  const M = parseInt(document.getElementById('lcM')?.value)||12;
+  const rate = (E+0.10)/100;
+  const fido = P*.80;
+  const uso = Math.min(U,fido);
+  const intA = uso*rate;
+  const intM = intA/12;
+  const intT = intA*(M/12);
+  const cedPortf = P*.05;
+  const bilancio = cedPortf - intA;
+  const cedLomb = uso*.05;
+  const netto = cedLomb - intA;
+
+  set('lrF',fmt(fido)); set('lrT',fmtPct(E+0.10));
+  set('lrIM',fmt(intM)); set('lrIT',fmt(intT));
+  const subEl=document.getElementById('lrISub'); if(subEl) subEl.textContent=M+' mesi';
+  set('lrC',fmt(cedPortf));
+  const bEl=document.getElementById('lrB');
+  if(bEl){ bEl.textContent=(bilancio>=0?'+':'')+fmt(bilancio); bEl.className='lv '+(bilancio>=0?'g':'r'); }
+  set('lsU',fmt(uso)); set('lsC',fmt(cedLomb)); set('lsCo',fmt(intA));
+  const vEl=document.getElementById('lsV');
+  const vtEl=document.getElementById('lsVT');
+  if(netto>0){
+    if(vEl){vEl.style.background='var(--green-soft)';vEl.style.borderColor='rgba(0,200,120,.3)'}
+    document.querySelector('.ls-verdict .vi').textContent='✅';
+    if(vtEl) vtEl.innerHTML=`<b>Strategia Positiva!</b> Cedola SD 5% &gt; Tasso Lombard ${fmtPct(E+0.10)}. Guadagno netto: <strong>+${fmt(netto)}/anno</strong> senza nuovo capitale.`;
+  } else {
+    if(vEl){vEl.style.background='rgba(255,79,110,.08)';vEl.style.borderColor='rgba(255,79,110,.3)'}
+    document.querySelector('.ls-verdict .vi').textContent='⚠️';
+    if(vtEl) vtEl.innerHTML=`<b>Attenzione:</b> Tasso Lombard (${fmtPct(E+0.10)}) > Cedola SD (5%). Strategia non conveniente. Attendere ribasso Euribor o usare Lombard per altri scopi.`;
+  }
+  const dsEl=document.getElementById('lsDesc');
+  if(dsEl) dsEl.textContent=`Portafoglio ${fmt(P)} → fido max ${fmt(fido)} (80% LTV) al ${fmtPct(E+0.10)}. Investendo ${fmt(uso)} in SD 7Y la cedola è ${fmt(cedLomb)} vs costo ${fmt(intA)}.`;
+}
+
+// ════════════════════════════════════════════
+//  CHARTS
+// ════════════════════════════════════════════
+let etfChart=null, allocChart=null;
+const ALLOC_COLORS=['#00C878','#0055CC','#FDB913','#00D4FF','#9B6BFF','#FF8C42'];
+
+function initETFChart(){
+  const ctx=document.getElementById('chartETF');
+  if(!ctx||etfChart) return;
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  const gc=isDark?'#1A3A60':'#C8D8F0';
+  const tc=isDark?'#4A6A88':'#7A90A8';
+  etfChart=new Chart(ctx,{type:'line',data:{
+    labels:['2020','2021','2022','2023','2024','2025'],
+    datasets:[
+      {label:'Dinamico',data:[100,118,108,126,141,162],borderColor:'#00C878',backgroundColor:'rgba(0,200,120,.08)',fill:true,tension:.4,pointRadius:3},
+      {label:'Bilanciato',data:[100,112,106,118,129,144],borderColor:'#0055CC',backgroundColor:'rgba(0,85,204,.06)',fill:true,tension:.4,pointRadius:3},
+      {label:'Prudente',data:[100,106,103,109,115,122],borderColor:'#FDB913',backgroundColor:'rgba(253,185,19,.06)',fill:true,tension:.4,pointRadius:3},
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:tc,font:{size:10}}}},
+    scales:{x:{ticks:{color:tc,font:{size:9}},grid:{color:gc}},y:{ticks:{color:tc,font:{size:9}},grid:{color:gc}}}
+  }});
+}
+
+function initAllocChart(){
+  const ctx=document.getElementById('chartAlloc');
+  if(!ctx) return;
+  if(allocChart){allocChart.destroy();allocChart=null;}
+  allocChart=new Chart(ctx,{type:'doughnut',data:{
+    labels:['SD 7Y','SD 3Y','Certificati','Active ETF','Longevity','ELTIF PE'],
+    datasets:[{data:[35,20,15,15,10,5],backgroundColor:ALLOC_COLORS,borderWidth:2,borderColor:'var(--card)',hoverOffset:5}]
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.label}: ${c.parsed}%`}}},
+    cutout:'62%'
+  }});
+}
+
+// ════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  updateAllCalcs();
+  setTimeout(initETFChart,500);
+  // Touch-friendly slider
+  const sl=document.getElementById('capSlider');
+  if(sl){
+    sl.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});
+    sl.addEventListener('touchmove',e=>{updateCap(sl.value);e.stopPropagation();},{passive:true});
+  }
+});
+</script>
+</body>
+</html>
